@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Rental Bridge</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/forms.css">
+  
+  <style>
+    body {
+      background: linear-gradient(135deg, #eaa166 0%, #675227 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+    }
+
+    .auth-container {
+      background: var(--white);
+      padding: var(--space-10);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      max-width: 500px;
+      width: 100%;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+
+    .auth-logo {
+      font-size: var(--fs-3xl);
+      margin-bottom: var(--space-4);
+    }
+
+    .role-selector {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+
+    .role-option {
+      padding: var(--space-5);
+      border: 2px solid var(--light-gray);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .role-option:hover {
+      border-color: var(--primary);
+    }
+
+    .role-option.active {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, 0.05);
+    }
+
+    .role-icon {
+      font-size: var(--fs-3xl);
+      margin-bottom: var(--space-2);
+    }
+
+    .alert {
+      padding: var(--space-4);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+      display: none;
+    }
+
+    .alert-error {
+      background: #fee;
+      color: var(--error);
+      border: 1px solid var(--error);
+    }
+
+    .alert-success {
+      background: #efe;
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: var(--space-6);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--light-gray);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-logo">🏠</div>
+      <h1>Create Account</h1>
+      <p>Join Rental Bridge today</p>
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <form id="registerForm" onsubmit="handleRegister(event)">
+      <div class="role-selector">
+        <div class="role-option active" onclick="selectRole('owner')" id="ownerRole">
+          <div class="role-icon">🏢</div>
+          <h4>Property Owner</h4>
+          <p style="font-size: 0.875rem; color: var(--gray); margin: 0;">List your properties</p>
+        </div>
+        <div class="role-option" onclick="selectRole('seeker')" id="seekerRole">
+          <div class="role-icon">🔍</div>
+          <h4>Property Seeker</h4>
+          <p style="font-size: 0.875rem; color: var(--gray); margin: 0;">Find rental homes</p>
+        </div>
+      </div>
+      <input type="hidden" id="role" value="owner">
+
+      <div class="form-group">
+        <label class="form-label" for="name">Full Name</label>
+        <input type="text" id="name" class="form-input" placeholder="John Doe" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone Number</label>
+        <input type="tel" id="phone" class="form-input" placeholder="+1 (555) 123-4567" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="Min. 6 characters" required minlength="6">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" class="form-input" placeholder="Re-enter password" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-checkbox">
+          <input type="checkbox" id="terms" required>
+          <span>I agree to the <a href="#" class="text-primary">Terms & Conditions</a></span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+    </form>
+
+    <div class="form-footer">
+      <p>Already have an account? <a href="login.html" class="text-primary">Login</a></p>
+      <a href="index.html" class="back-home text-primary">← Back to Home</a>
+    </div>
+  </div>
+
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    function selectRole(role) {
+      document.getElementById('role').value = role;
+      document.getElementById('ownerRole').classList.remove('active');
+      document.getElementById('seekerRole').classList.remove('active');
+      
+      if (role === 'owner') {
+        document.getElementById('ownerRole').classList.add('active');
+      } else {
+        document.getElementById('seekerRole').classList.add('active');
+      }
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const role = document.getElementById('role').value;
+      
+      const alert = document.getElementById('alert');
+      
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        alert.className = 'alert alert-error';
+        alert.textContent = 'Passwords do not match';
+        alert.style.display = 'block';
+        return;
+      }
+      
+      const result = register(name, email, phone, password, role);
+      
+      if (result.success) {
+        alert.className = 'alert alert-success';
+        alert.textContent = result.message;
+        alert.style.display = 'block';
+        
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 1500);
+      } else {
+        alert.className = 'alert alert-error';
+        alert.textContent = result.message;
+        alert.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

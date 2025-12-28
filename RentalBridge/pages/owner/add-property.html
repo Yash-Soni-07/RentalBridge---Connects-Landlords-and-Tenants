@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Property - Rental Bridge</title>
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="../../assets/css/forms.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .form-container{
+  max-width: 800px;
+  margin: 0 auto;
+  padding:
+    calc(var(--navbar-height) + var(--space-10))
+    var(--space-4)
+    var(--space-16);
+}
+
+        .form-card{background:rgb(163, 83, 17);padding:var(--space-8);border-radius:var(--radius-xl);box-shadow:var(--shadow-lg)}
+        .form-header{margin-bottom:var(--space-6)}
+        .form-header h1{font-size:var(--text-3xl);color:var(--gray-900);margin-bottom:var(--space-2)}
+        .form-grid{display:grid;gap:var(--space-5)}
+        .form-row{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+  width: 100%;
+}
+
+        .form-group{display:flex;flex-direction:column;gap:var(--space-2)}
+        .form-group label{font-weight:500;color:var(--gray-700)}
+        .form-group input,.form-group select,.form-group textarea{padding:var(--space-3);border:1px solid var(--gray-300);border-radius:var(--radius-md);font-size:var(--text-base)}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary-color);box-shadow:0 0 0 3px var(--primary-lighter)}
+        .form-group textarea{min-height:120px;resize:vertical}
+        .amenities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--space-3)}
+        .amenity-checkbox{display:flex;align-items:center;gap:var(--space-2)}
+        .amenity-checkbox input[type="checkbox"]{width:18px;height:18px;cursor:pointer}
+        .image-upload{border:2px dashed var(--gray-300);border-radius:var(--radius-lg);padding:var(--space-6);text-align:center;cursor:pointer;transition:all .2s}
+        .image-upload:hover{border-color:var(--primary-color);background:var(--gray-50)}
+        .image-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:var(--space-3);margin-top:var(--space-4)}
+        .preview-item{position:relative;padding-top:100%;border-radius:var(--radius-md);overflow:hidden}
+        .preview-item img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+        .remove-img{position:absolute;top:5px;right:5px;background:var(--error-color);color:white;border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:12px}
+        .form-actions{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-top:var(--space-6)}
+        .btn-submit{background:var(--primary-color);color:white;padding:var(--space-3);border:none;border-radius:var(--radius-md);font-size:var(--text-base);font-weight:500;cursor:pointer}
+        .btn-submit:hover{background:var(--primary-dark)}
+        .btn-cancel{background:var(--gray-200);color:var(--gray-700);padding:var(--space-3);border:none;border-radius:var(--radius-md);font-size:var(--text-base);font-weight:500;cursor:pointer;text-decoration:none;text-align:center}
+        @media(max-width:768px){.form-row{grid-template-columns:1fr}}
+        
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <main class="form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1 id="formTitle">Add New Property</h1>
+                <p style="color:var(--gray-600)">Fill in the details to list your property</p>
+            </div>
+            <form id="propertyForm" class="form-grid">
+                <div class="form-group">
+                    <label>Property Title*</label>
+                    <input type="text" id="title" required placeholder="e.g., Spacious 3BHK Apartment">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Property Type*</label>
+                        <select id="type" required>
+                            <option value="">Select Type</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="house">House</option>
+                            <option value="villa">Villa</option>
+                            <option value="studio">Studio</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly Rent (₹)*</label>
+                        <input type="number" id="price" required placeholder="25000">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Bedrooms*</label>
+                        <input type="number" id="bedrooms" required min="1" placeholder="3">
+                    </div>
+                    <div class="form-group">
+                        <label>Bathrooms*</label>
+                        <input type="number" id="bathrooms" required min="1" placeholder="2">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Area (sqft)*</label>
+                        <input type="number" id="area" required placeholder="1200">
+                    </div>
+                    <div class="form-group">
+                        <label>Furnishing*</label>
+                        <select id="furnishing" required>
+                            <option value="">Select</option>
+                            <option value="furnished">Furnished</option>
+                            <option value="semi-furnished">Semi-Furnished</option>
+                            <option value="unfurnished">Unfurnished</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Location*</label>
+                    <input type="text" id="location" required placeholder="City, Area">
+                </div>
+                <div class="form-group">
+                    <label>Description*</label>
+                    <textarea id="description" required placeholder="Describe your property..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Amenities</label>
+                    <div class="amenities-grid">
+                        <label class="amenity-checkbox"><input type="checkbox" value="parking"> Parking</label>
+                        <label class="amenity-checkbox"><input type="checkbox" value="gym"> Gym</label>
+                        <label class="amenity-checkbox"><input type="checkbox" value="pool"> Pool</label>
+                        <label class="amenity-checkbox"><input type="checkbox" value="wifi"> WiFi</label>
+                        <label class="amenity-checkbox"><input type="checkbox" value="ac"> AC</label>
+                        <label class="amenity-checkbox"><input type="checkbox" value="security"> Security</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Property Images (URLs)</label>
+                    <input type="text" id="imageUrl" placeholder="Enter image URL">
+                    <button type="button" class="btn btn-secondary" onclick="addImage()" style="margin-top:var(--space-2)">Add Image</button>
+                    <div class="image-preview" id="imagePreview"></div>
+                </div>
+                <div class="form-actions">
+                    <a href="my-properties.html" class="btn-cancel">Cancel</a>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> <span id="submitBtn">Add Property</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <div id="footer-container"></div>
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/properties.js"></script>
+    <script src="../../assets/js/owner.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        let images=[],editId=null;
+        document.addEventListener('DOMContentLoaded',async()=>{
+            await loadComponent('navbar-container','../../components/navbar.html');
+            await loadComponent('footer-container','../../components/footer.html');
+            checkOwnerAuth();
+            const urlParams=new URLSearchParams(window.location.search);
+            editId=urlParams.get('id');
+            if(editId)loadPropertyForEdit(editId);
+            document.getElementById('propertyForm').addEventListener('submit',handleSubmit);
+        });
+        function loadPropertyForEdit(id){
+            const property=getOwnerProperties().find(p=>p.id===id);
+            if(!property)return;
+            document.getElementById('formTitle').textContent='Edit Property';
+            document.getElementById('submitBtn').textContent='Update Property';
+            document.getElementById('title').value=property.title;
+            document.getElementById('type').value=property.type;
+            document.getElementById('price').value=property.price;
+            document.getElementById('bedrooms').value=property.bedrooms;
+            document.getElementById('bathrooms').value=property.bathrooms;
+            document.getElementById('area').value=property.area;
+            document.getElementById('furnishing').value=property.furnishing;
+            document.getElementById('location').value=property.location;
+            document.getElementById('description').value=property.description;
+            images=property.images||[];
+            updateImagePreview();
+            property.amenities?.forEach(a=>{
+                const checkbox=document.querySelector(`input[value="${a}"]`);
+                if(checkbox)checkbox.checked=true;
+            });
+        }
+        function addImage(){
+            const url=document.getElementById('imageUrl').value.trim();
+            if(url){
+                images.push(url);
+                document.getElementById('imageUrl').value='';
+                updateImagePreview();
+            }
+        }
+        function updateImagePreview(){
+            document.getElementById('imagePreview').innerHTML=images.map((url,i)=>`
+                <div class="preview-item">
+                    <img src="${url}" alt="Property">
+                    <button type="button" class="remove-img" onclick="removeImage(${i})">×</button>
+                </div>
+            `).join('');
+        }
+        function removeImage(index){
+            images.splice(index,1);
+            updateImagePreview();
+        }
+        function handleSubmit(e){
+            e.preventDefault();
+            const amenities=Array.from(document.querySelectorAll('.amenity-checkbox input:checked')).map(cb=>cb.value);
+            const property={
+                id:editId||Date.now().toString(),
+                title:document.getElementById('title').value,
+                type:document.getElementById('type').value,
+                price:parseInt(document.getElementById('price').value),
+                bedrooms:parseInt(document.getElementById('bedrooms').value),
+                bathrooms:parseInt(document.getElementById('bathrooms').value),
+                area:parseInt(document.getElementById('area').value),
+                furnishing:document.getElementById('furnishing').value,
+                location:document.getElementById('location').value,
+                description:document.getElementById('description').value,
+                amenities,
+                images,
+                status:'active',
+                ownerId:getCurrentUser().id,
+                createdAt:editId?undefined:new Date().toISOString()
+            };
+            const properties=getOwnerProperties();
+            if(editId){
+                const index=properties.findIndex(p=>p.id===editId);
+                properties[index]=property;
+            }else{
+                properties.push(property);
+            }
+            const currentUser=getCurrentUser();
+            localStorage.setItem(`properties_${currentUser.id}`,JSON.stringify(properties));
+            showNotification(editId?'Property updated successfully':'Property added successfully','success');
+            setTimeout(()=>window.location.href='my-properties.html',1000);
+        }
+    </script>
+</body>
+</html>

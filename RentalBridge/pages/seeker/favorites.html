@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favorites - Rental Bridge</title>
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="../../assets/css/cards.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===============================
+   FAVORITES – DARK THEME
+   =============================== */
+
+.favorites-container{
+  max-width:1200px;
+  margin:calc(var(--navbar-height) + var(--space-8)) auto var(--space-10);
+  padding:0 var(--space-4);
+  color:#f5f5f4;
+}
+
+/* Header */
+.page-header{
+  margin-bottom:var(--space-6);
+}
+.page-header h1{
+  font-size:var(--text-3xl);
+  color:#ffffff;
+  margin-bottom:var(--space-2);
+}
+
+/* Grid */
+.favorites-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:var(--space-6);
+}
+
+/* Card */
+.favorite-card{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--radius-xl);
+  overflow:hidden;
+  box-shadow:var(--shadow-md);
+  transition:all .3s ease;
+}
+.favorite-card:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-xl);
+  border-color:rgba(217,119,6,.6);
+}
+
+/* Image */
+.property-img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  cursor:pointer;
+}
+
+/* Remove button */
+.remove-btn{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:40px;
+  height:40px;
+  background:rgba(0,0,0,.6);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#f87171;
+  transition:.2s;
+}
+.remove-btn:hover{
+  background:#dc2626;
+  color:white;
+  transform:scale(1.1);
+}
+
+/* Content */
+.property-content{
+  padding:var(--space-4);
+}
+.property-title{
+  font-size:var(--text-lg);
+  font-weight:600;
+  margin-bottom:var(--space-2);
+  color:#ffffff;
+}
+.property-price{
+  font-size:var(--text-xl);
+  color:var(--primary);
+  font-weight:700;
+  margin-bottom:var(--space-2);
+}
+.property-location,
+.property-features{
+  color:rgba(255,255,255,.65);
+  font-size:var(--text-sm);
+  display:flex;
+  align-items:center;
+  gap:var(--space-1);
+  margin-bottom:var(--space-3);
+}
+
+/* View button */
+.view-btn{
+  width:100%;
+  padding:var(--space-3);
+  background:linear-gradient(135deg,#f59e0b,#d97706);
+  color:#111827;
+  border:none;
+  border-radius:var(--radius-md);
+  cursor:pointer;
+  font-weight:600;
+  transition:.2s;
+}
+.view-btn:hover{
+  filter:brightness(1.1);
+}
+
+/* Empty State */
+.empty-state{
+  text-align:center;
+  padding:var(--space-16);
+}
+.empty-state i{
+  font-size:80px;
+  color:rgba(255,255,255,.25);
+  margin-bottom:var(--space-4);
+}
+.empty-state h3{
+  color:#ffffff;
+}
+.empty-state p{
+  color:rgba(255,255,255,.65);
+}
+
+/* Mobile */
+@media(max-width:768px){
+  .favorites-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <main class="favorites-container">
+        <div class="page-header">
+            <h1>My Favorites (<span id="favCount">0</span>)</h1>
+            <p style="color:var(--gray-600)">Properties you've saved for later</p>
+        </div>
+        <div class="favorites-grid" id="favoritesGrid"></div>
+    </main>
+    <div id="footer-container"></div>
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/properties.js"></script>
+    <script src="../../assets/js/seeker.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded',async()=>{
+            await loadComponent('navbar-container','../../components/navbar.html');
+            await loadComponent('footer-container','../../components/footer.html');
+            loadFavorites();
+        });
+        function loadFavorites(){
+            const favoriteIds=getFavorites();
+            const allProperties=getAllProperties();
+            const favorites=allProperties.filter(p=>favoriteIds.includes(p.id));
+            document.getElementById('favCount').textContent=favorites.length;
+            const grid=document.getElementById('favoritesGrid');
+            if(favorites.length===0){
+                grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1">
+                    <i class="fas fa-heart-broken"></i>
+                    <h3>No Favorites Yet</h3>
+                    <p>Start browsing and save properties you like</p>
+                    <a href="browse-properties.html" class="btn btn-primary" style="display:inline-block;margin-top:var(--space-4)">
+                        Browse Properties
+                    </a>
+                </div>`;
+                return;
+            }
+            grid.innerHTML=favorites.map(p=>`
+                <div class="favorite-card">
+                    <img src="${p.images?.[0]||'../../assets/images/placeholder.jpg'}" alt="${p.title}" class="property-img" onclick="viewProperty('${p.id}')">
+                    <button class="remove-btn" onclick="removeFavorite('${p.id}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="property-content">
+                        <h3 class="property-title">${p.title}</h3>
+                        <div class="property-price">₹${p.price.toLocaleString()}/mo</div>
+                        <div class="property-location"><i class="fas fa-map-marker-alt"></i>${p.location}</div>
+                        <div class="property-features">
+                            <span><i class="fas fa-bed"></i>${p.bedrooms}</span>
+                            <span><i class="fas fa-bath"></i>${p.bathrooms}</span>
+                            <span><i class="fas fa-ruler"></i>${p.area} sqft</span>
+                        </div>
+                        <button class="view-btn" onclick="viewProperty('${p.id}')">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function removeFavorite(id){
+            const favorites=getFavorites();
+            const index=favorites.indexOf(id);
+            if(index>-1){
+                favorites.splice(index,1);
+                saveFavorites(favorites);
+                showNotification('Removed from favorites','success');
+                loadFavorites();
+            }
+        }
+        function viewProperty(id){
+            addToViewed(id);
+            window.location.href=`property-details.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>

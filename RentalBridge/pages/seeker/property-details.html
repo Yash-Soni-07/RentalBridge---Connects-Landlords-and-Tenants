@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Details - Rental Bridge</title>
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="../../assets/css/modals.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        /* ===============================
+   PROPERTY DETAILS – DARK THEME
+   =============================== */
+
+        .details-container {
+            max-width: 1200px;
+            margin: calc(var(--navbar-height) + var(--space-6)) auto var(--space-10);
+            padding: 0 var(--space-4);
+            color: #f5f5f4;
+        }
+
+        /* Back */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: var(--space-4);
+            font-weight: 500;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            position: relative;
+            height: 500px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            margin-bottom: var(--space-8);
+            border: 1px solid rgba(255, 255, 255, .15);
+        }
+
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Image Nav */
+        .image-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 var(--space-4);
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, .6);
+            border: 1px solid rgba(255, 255, 255, .3);
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+            transition: .2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: #111;
+        }
+
+        /* Favorite */
+        .fav-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, .6);
+            border: 1px solid rgba(255, 255, 255, .3);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            font-size: var(--text-xl);
+            color: white;
+            transition: .2s;
+        }
+
+        .fav-toggle.active {
+            background: #dc2626;
+            color: white;
+        }
+
+        /* Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+
+        /* Main Content */
+        .main-content {
+            background: rgba(255, 255, 255, .05);
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, .12);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Header */
+        .property-title {
+            font-size: var(--text-3xl);
+            color: #ffffff;
+            margin-bottom: var(--space-2);
+        }
+
+        .property-location {
+            color: rgba(255, 255, 255, .65);
+            font-size: var(--text-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .price-tag {
+            font-size: var(--text-4xl);
+            color: var(--primary);
+            font-weight: 700;
+            margin: var(--space-4) 0;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-4);
+            padding: var(--space-4);
+            background: rgba(0, 0, 0, .35);
+            border-radius: var(--radius-lg);
+            margin: var(--space-4) 0;
+        }
+
+        .feature-icon {
+            font-size: var(--text-2xl);
+            color: var(--primary);
+        }
+
+        .feature-label {
+            font-size: var(--text-sm);
+            color: rgba(255, 255, 255, .6);
+        }
+
+        .feature-value {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            margin-bottom: var(--space-3);
+            color: #ffffff;
+        }
+
+        /* Amenities */
+        .amenities-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: var(--space-3);
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2);
+            background: rgba(5, 150, 105, .15);
+            border-radius: var(--radius-md);
+            color: #34d399;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .contact-card {
+            background: rgba(255, 255, 255, .05);
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, .12);
+            position: sticky;
+            top: var(--space-6);
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-card h3 {
+            font-size: var(--text-xl);
+            margin-bottom: var(--space-4);
+            text-align: center;
+            color: #ffffff;
+        }
+
+        /* Form */
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--space-3);
+            background: rgba(0, 0, 0, .4);
+            border: 1px solid rgba(255, 255, 255, .2);
+            border-radius: var(--radius-md);
+            color: white;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #111827;
+            padding: var(--space-3);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        /* Mobile */
+        @media(max-width:968px) {
+            .content-grid {
+                grid-template-columns: 1fr
+            }
+
+            .image-gallery {
+                height: 300px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+    <main class="details-container">
+        <a href="browse-properties.html" class="back-btn"><i class="fas fa-arrow-left"></i>Back to Listings</a>
+        <div class="image-gallery">
+            <img id="mainImage" src="" alt="Property" class="main-image">
+            <div class="image-nav">
+                <button class="nav-btn" onclick="prevImage()"><i class="fas fa-chevron-left"></i></button>
+                <button class="nav-btn" onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <button class="fav-toggle" id="favToggle" onclick="toggleFav()"><i class="fas fa-heart"></i></button>
+        </div>
+        <div class="content-grid">
+            <div class="main-content">
+                <div class="property-header">
+                    <h1 class="property-title" id="propertyTitle"></h1>
+                    <div class="property-location"><i class="fas fa-map-marker-alt"></i><span
+                            id="propertyLocation"></span></div>
+                </div>
+                <div class="price-tag">₹<span id="propertyPrice"></span>/month</div>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-bed"></i></div>
+                        <div class="feature-value" id="bedrooms"></div>
+                        <div class="feature-label">Bedrooms</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-bath"></i></div>
+                        <div class="feature-value" id="bathrooms"></div>
+                        <div class="feature-label">Bathrooms</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-ruler"></i></div>
+                        <div class="feature-value" id="area"></div>
+                        <div class="feature-label">Sq Ft</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fas fa-couch"></i></div>
+                        <div class="feature-value" id="furnishing"></div>
+                        <div class="feature-label">Furnishing</div>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2 class="section-title">Description</h2>
+                    <p id="description" style="line-height:1.8;color:var(--gray-700)"></p>
+                </div>
+                <div class="section">
+                    <h2 class="section-title">Amenities</h2>
+                    <div class="amenities-list" id="amenitiesList"></div>
+                </div>
+            </div>
+            <div class="sidebar">
+                <div class="contact-card">
+                    <h3>Interested in this property?</h3>
+                    <form class="inquiry-form" onsubmit="sendInquiry(event)">
+                        <div class="form-group">
+                            <input type="text" id="inquiryName" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="inquiryEmail" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="inquiryPhone" placeholder="Your Phone" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="inquiryMessage" placeholder="Your Message"
+                                required>I'm interested in this property. Please contact me.</textarea>
+                        </div>
+                        <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Send
+                            Inquiry</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="footer-container"></div>
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        let property = null;
+        let currentImageIndex = 0;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadComponent('navbar-container', '../../components/navbar.html');
+            await loadComponent('footer-container', '../../components/footer.html');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const propertyId = urlParams.get('id');
+
+            if (!propertyId) {
+                showToast('Property not found', 'error');
+                setTimeout(() => window.location.href = 'browse-properties.html', 2000);
+                return;
+            }
+
+            // Get all properties and find by ID (convert to number for comparison)
+            const allProperties = getAllProperties();
+            property = allProperties.find(p => p.id == propertyId); // Use == for type coercion
+
+            if (property) {
+                displayProperty(property);
+                updateFavButton();
+            } else {
+                showToast('Property not found', 'error');
+                setTimeout(() => window.location.href = 'browse-properties.html', 2000);
+            }
+        });
+
+        function displayProperty(p) {
+            document.getElementById('propertyTitle').textContent = p.title || 'Property';
+            document.getElementById('propertyLocation').textContent = p.location || 'Location not specified';
+            document.getElementById('propertyPrice').textContent = (p.price || 0).toLocaleString();
+            document.getElementById('bedrooms').textContent = p.bedrooms || 0;
+            document.getElementById('bathrooms').textContent = p.bathrooms || 0;
+            document.getElementById('area').textContent = (p.area || 0).toLocaleString();
+            document.getElementById('furnishing').textContent = p.furnished ? 'Furnished' : 'Unfurnished';
+            document.getElementById('description').textContent = p.description || 'No description available';
+
+            // Display main image
+            if (p.images && p.images.length > 0) {
+                document.getElementById('mainImage').src = p.images[0];
+            } else {
+                document.getElementById('mainImage').src = 'https://via.placeholder.com/800x500?text=No+Image';
+            }
+
+            // Display amenities
+            if (p.amenities && p.amenities.length > 0) {
+                document.getElementById('amenitiesList').innerHTML = p.amenities.map(a =>
+                    `<div class="amenity-item"><i class="fas fa-check-circle"></i> ${a}</div>`
+                ).join('');
+            } else {
+                document.getElementById('amenitiesList').innerHTML = '<p style="color:rgba(255,255,255,0.5)">No amenities listed</p>';
+            }
+        }
+
+        function prevImage() {
+            if (!property || !property.images || property.images.length === 0) return;
+
+            currentImageIndex = (currentImageIndex - 1 + property.images.length) % property.images.length;
+            document.getElementById('mainImage').src = property.images[currentImageIndex];
+        }
+
+        function nextImage() {
+            if (!property || !property.images || property.images.length === 0) return;
+
+            currentImageIndex = (currentImageIndex + 1) % property.images.length;
+            document.getElementById('mainImage').src = property.images[currentImageIndex];
+        }
+
+        function toggleFav() {
+            const user = getCurrentUser();
+
+            if (!user) {
+                showToast('Please login to add favorites', 'error');
+                setTimeout(() => window.location.href = '../../login.html', 1500);
+                return;
+            }
+
+            let allFavorites = getData(STORAGE_KEYS.FAVORITES);
+            const exists = allFavorites.find(f => f.userId === user.id && f.propertyId === property.id);
+
+            if (exists) {
+                // Remove
+                allFavorites = allFavorites.filter(f => !(f.userId === user.id && f.propertyId === property.id));
+                showToast('Removed from favorites', 'info');
+            } else {
+                // Add
+                allFavorites.push({
+                    userId: user.id,
+                    propertyId: property.id,
+                    createdAt: new Date().toISOString()
+                });
+                showToast('Added to favorites!', 'success');
+            }
+
+            setData(STORAGE_KEYS.FAVORITES, allFavorites);
+            updateFavButton();
+        }
+
+        function updateFavButton() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const btn = document.getElementById('favToggle');
+            const allFavorites = getData(STORAGE_KEYS.FAVORITES);
+            const isFav = allFavorites.some(f => f.userId === user.id && f.propertyId === property.id);
+
+            if (isFav) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+
+        function sendInquiry(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('inquiryName').value;
+    const email = document.getElementById('inquiryEmail').value;
+    const phone = document.getElementById('inquiryPhone').value;
+    const message = document.getElementById('inquiryMessage').value;
+    
+    // Validate
+    if (!name || !email || !phone || !message) {
+        showToast('Please fill all fields', 'error');
+        return;
+    }
+    
+    // Save to storage first
+    const inquiry = {
+        propertyId: property.id,
+        propertyTitle: property.title,
+        propertyLocation: property.location,
+        propertyPrice: property.price,
+        name: name,
+        email: email,
+        phone: phone,
+        message: message,
+        createdAt: new Date().toISOString(),
+        status: 'sent'
+    };
+    
+    const allInquiries = getAllInquiries();
+    allInquiries.push(inquiry);
+    setData(STORAGE_KEYS.INQUIRIES, allInquiries);
+    
+    // Send via EmailJS
+    if (typeof emailjs !== 'undefined') {
+        const templateParams = {
+            to_name: 'Rental Bridge Team',
+            from_name: name,
+            from_email: email,
+            from_phone: phone,
+            property_title: property.title,
+            property_location: property.location,
+            property_rent: `₹${property.price}/month`,
+            message: message,
+            reply_to: email,
+            subject: `Property Inquiry: ${property.title} - ${property.location}`,
+            contact_date: new Date().toLocaleString('en-IN', {
+                dateStyle: 'full',
+                timeStyle: 'short'
+            })
+        };
+        
+        emailjs.init('xmt7I_-lQCfJZVGl_');
+        
+        emailjs.send('service_i9ghxpw', 'template_vrzgt3q', templateParams)
+            .then(function(response) {
+                console.log('Email sent successfully:', response);
+                showToast('✅ Inquiry sent successfully! We will contact you soon.', 'success');
+                e.target.reset();
+            })
+            .catch(function(error) {
+                console.error('Email send failed:', error);
+                showToast('Inquiry saved but email failed. We will still contact you.', 'warning');
+                e.target.reset();
+            });
+    } else {
+        // Fallback to mailto
+        const subject = `Property Inquiry: ${property.title} - ${property.location}`;
+        const body = `
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+Date: ${new Date().toLocaleString('en-IN', { dateStyle: 'full', timeStyle: 'short' })}
+
+Message:
+${message}
+
+Property Details:
+Title: ${property.title}
+Location: ${property.location}
+Price: ₹${property.price}/month
+        `.trim();
+        
+        window.open(`mailto:owner@rentalbridge.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+        showToast('Inquiry saved! Opening email client...', 'success');
+        e.target.reset();
+    }
+}
+    </script>
+</body>
+
+</html>

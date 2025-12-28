@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard - Rental Bridge</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="../../assets/css/cards.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+       /* ===============================
+   OWNER DASHBOARD – VISIBILITY FIX
+   =============================== */
+
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: calc(var(--navbar-height) + var(--space-8)) var(--space-4) var(--space-10);
+  color: #f5f5f4;
+}
+
+/* Header */
+.dashboard-header {
+  margin-bottom: var(--space-8);
+}
+
+.dashboard-header h1 {
+  font-size: var(--text-4xl);
+  color: #ffffff;
+  margin-bottom: var(--space-2);
+}
+
+.dashboard-header p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--text-lg);
+}
+
+/* ===============================
+   STAT CARDS
+   =============================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-10);
+}
+
+.stat-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.03)
+  );
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-base);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: rgba(217, 119, 6, 0.5);
+}
+
+.stat-value {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: #ffffff;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: var(--text-sm);
+}
+
+.stat-change {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--primary);
+}
+
+/* Icons */
+.stat-icon {
+  background: rgba(217, 119, 6, 0.15);
+  color: var(--primary);
+}
+
+/* ===============================
+   QUICK ACTIONS
+   =============================== */
+.quick-actions {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  margin-bottom: var(--space-10);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.quick-actions h2 {
+  color: #ffffff;
+  margin-bottom: var(--space-4);
+}
+
+.action-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f5f5f4;
+}
+
+.action-btn:hover {
+  background: rgba(217, 119, 6, 0.15);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+/* ===============================
+   SECTION CARDS
+   =============================== */
+.section-card {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  margin-bottom: var(--space-10);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.section-header h2 {
+  color: #ffffff;
+}
+
+.view-all-link {
+  color: var(--primary);
+}
+
+/* ===============================
+   PROPERTY ITEMS
+   =============================== */
+.property-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.property-title {
+  color: #ffffff;
+}
+
+.property-meta {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.property-status.active {
+  background: rgba(5, 150, 105, 0.15);
+  color: #34d399;
+}
+
+.property-status.pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+/* ===============================
+   EMPTY STATE
+   =============================== */
+.empty-state {
+  text-align: center;
+  padding: var(--space-12);
+}
+
+.empty-state i {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.empty-state h3 {
+  color: #ffffff;
+}
+
+.empty-state p {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ===============================
+   MOBILE
+   =============================== */
+@media (max-width: 768px) {
+  .dashboard-header h1 {
+    font-size: var(--text-3xl);
+  }
+}
+/* ===============================
+   FINAL POLISH – CONTRAST & HIERARCHY
+   =============================== */
+
+/* ---------- STAT CARDS ENHANCEMENT ---------- */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  opacity: 0.8;
+}
+
+/* ---------- QUICK ACTION BUTTONS ---------- */
+.action-btn {
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.action-btn i {
+  font-size: 0.9rem;
+}
+
+/* ---------- SECTION CARD DEPTH ---------- */
+.section-card {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- PROPERTY LIST VISIBILITY ---------- */
+.property-item {
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+}
+
+.property-item + .property-item {
+  margin-top: 0.75rem;
+}
+
+.property-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(217, 119, 6, 0.4);
+}
+
+/* ---------- PROPERTY ACTION BUTTONS ---------- */
+.property-actions button {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.7rem;
+  border-radius: 8px;
+}
+
+/* ---------- STATUS BADGES ---------- */
+.property-status {
+  font-size: 0.65rem;
+  padding: 0.25rem 0.6rem;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- EMPTY STATE CENTERING ---------- */
+.empty-state {
+  opacity: 0.95;
+}
+
+/* ---------- MOBILE BREATHING ---------- */
+@media (max-width: 768px) {
+  .stats-grid {
+    gap: var(--space-4);
+  }
+
+  .section-card {
+    padding: var(--space-5);
+  }
+}
+
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Content -->
+    <main class="dashboard-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1>Welcome back, <span id="ownerName">Owner</span>! 👋</h1>
+            <p>Manage your properties and track your rental business</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-home"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalProperties">0</div>
+                <div class="stat-label">Total Properties</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Active listings</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon green">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="activeProperties">0</div>
+                <div class="stat-label">Active Properties</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Currently listed</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalInquiries">0</div>
+                <div class="stat-label">Total Inquiries</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>New leads</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalViews">0</div>
+                <div class="stat-label">Total Views</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>This month</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                <a href="add-property.html" class="action-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add New Property</span>
+                </a>
+                <a href="my-properties.html" class="action-btn">
+                    <i class="fas fa-list"></i>
+                    <span>View All Properties</span>
+                </a>
+                <a href="inquiries.html" class="action-btn">
+                    <i class="fas fa-inbox"></i>
+                    <span>Check Inquiries</span>
+                </a>
+                <a href="../../index.html" class="action-btn">
+                    <i class="fas fa-search"></i>
+                    <span>Browse Listings</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Properties -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2>Recent Properties</h2>
+                <a href="my-properties.html" class="view-all-link">
+                    View All
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="property-list" id="recentPropertiesList">
+                <!-- Properties will be loaded here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Recent Inquiries -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2>Recent Inquiries</h2>
+                <a href="inquiries.html" class="view-all-link">
+                    View All
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div id="recentInquiriesList">
+                <!-- Inquiries will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div id="footer-container"></div>
+
+    <!-- JavaScript Files -->
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/properties.js"></script>
+    <script src="../../assets/js/owner.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/main.js"></script>
+
+    <script>
+        // Load components
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load navbar and footer
+            await loadComponent('navbar-container', '../../components/navbar.html');
+            await loadComponent('footer-container', '../../components/footer.html');
+
+            // Check authentication
+            checkOwnerAuth();
+
+            // Load dashboard data
+            loadDashboardStats();
+            loadRecentProperties();
+            loadRecentInquiries();
+        });
+
+        function loadDashboardStats() {
+            const properties = getOwnerProperties();
+            const inquiries = getAllInquiries();
+            
+            document.getElementById('totalProperties').textContent = properties.length;
+            document.getElementById('activeProperties').textContent = 
+                properties.filter(p => p.status === 'active').length;
+            document.getElementById('totalInquiries').textContent = inquiries.length;
+            
+            // Calculate total views
+            const totalViews = properties.reduce((sum, p) => sum + (p.views || 0), 0);
+            document.getElementById('totalViews').textContent = totalViews;
+
+            // Update owner name
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                document.getElementById('ownerName').textContent = currentUser.name;
+            }
+        }
+
+        function loadRecentProperties() {
+            const properties = getOwnerProperties().slice(0, 3);
+            const container = document.getElementById('recentPropertiesList');
+            
+            if (properties.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-home"></i>
+                        <h3>No Properties Yet</h3>
+                        <p>Start by adding your first property listing</p>
+                        <a href="add-property.html" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Property
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = properties.map(property => `
+                <div class="property-item">
+                    <img src="${property.images && property.images[0] ? property.images[0] : '../../assets/images/placeholder.jpg'}" 
+                         alt="${property.title}" 
+                         class="property-image">
+                    <div class="property-info">
+                        <h3 class="property-title">${property.title}</h3>
+                        <div class="property-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> ${property.location}</span>
+                            <span><i class="fas fa-dollar-sign"></i> ${formatPrice(property.price)}/month</span>
+                            <span><i class="fas fa-bed"></i> ${property.bedrooms} Beds</span>
+                        </div>
+                        <span class="property-status ${property.status}">${property.status}</span>
+                        <div class="property-actions">
+                            <button class="btn-primary" onclick="viewProperty('${property.id}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="btn-secondary" onclick="editProperty('${property.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadRecentInquiries() {
+            const inquiries = getAllInquiries().slice(0, 5);
+            const container = document.getElementById('recentInquiriesList');
+            
+            if (inquiries.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-envelope-open"></i>
+                        <h3>No Inquiries Yet</h3>
+                        <p>You'll see inquiries from interested renters here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="property-list">
+                    ${inquiries.map(inquiry => `
+                        <div class="property-item">
+                            <div class="property-info">
+                                <h3 class="property-title">${inquiry.name}</h3>
+                                <div class="property-meta">
+                                    <span><i class="fas fa-envelope"></i> ${inquiry.email}</span>
+                                    <span><i class="fas fa-phone"></i> ${inquiry.phone}</span>
+                                    <span><i class="fas fa-clock"></i> ${formatDate(inquiry.date)}</span>
+                                </div>
+                                <p style="color: var(--gray-600); margin-top: var(--space-2);">
+                                    ${inquiry.message.substring(0, 100)}...
+                                </p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function viewProperty(id) {
+            window.location.href = `../../pages/seeker/property-details.html?id=${id}`;
+        }
+
+        function editProperty(id) {
+            window.location.href = `add-property.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>

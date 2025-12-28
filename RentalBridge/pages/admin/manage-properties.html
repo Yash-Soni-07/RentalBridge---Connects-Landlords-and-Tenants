@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Properties - Admin Dashboard - Rental Bridge</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/cards.css">
+    <link rel="stylesheet" href="../../assets/css/forms.css">
+    <link rel="stylesheet" href="../../assets/css/modals.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    
+    <style>
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: var(--light-bg);
+        }
+        
+        .dashboard-sidebar {
+            width: 280px;
+            background: var(--white);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--light-bg);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .dashboard-main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filters select,
+        .filters input {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .properties-table {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: var(--light-bg);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .property-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .property-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .property-details h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .property-details p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-pending {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .status-approved {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-rejected {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--error-color);
+        }
+        
+        .status-rented {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-view {
+            background: var(--info-color);
+            color: var(--white);
+        }
+        
+        .btn-approve {
+            background: var(--success-color);
+            color: var(--white);
+        }
+        
+        .btn-reject {
+            background: var(--error-color);
+            color: var(--white);
+        }
+        
+        .btn-delete {
+            background: var(--error-color);
+            color: var(--white);
+        }
+        
+        .btn-sm:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h2>🏢 Admin Panel</h2>
+                <p class="user-role">Administrator</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="manage-properties.html" class="active">
+                    <span>🏠</span>
+                    <span>Manage Properties</span>
+                </a>
+                <a href="manage-users.html">
+                    <span>👥</span>
+                    <span>Manage Users</span>
+                </a>
+                <a href="inquiries.html">
+                    <span>📧</span>
+                    <span>Inquiries</span>
+                </a>
+                <a href="../../index.html">
+                    <span>🏠</span>
+                    <span>Back to Home</span>
+                </a>
+                <a href="#" onclick="logout()">
+                    <span>🚪</span>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <div>
+                    <h1>Manage Properties</h1>
+                    <p>Review and manage all property listings</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h3>Total Properties</h3>
+                    <div class="stat-value" id="totalProperties">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Approval</h3>
+                    <div class="stat-value" id="pendingProperties">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Approved</h3>
+                    <div class="stat-value" id="approvedProperties">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Rented</h3>
+                    <div class="stat-value" id="rentedProperties">0</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <input type="text" id="searchInput" placeholder="🔍 Search properties...">
+                <select id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="rented">Rented</option>
+                </select>
+                <select id="typeFilter">
+                    <option value="all">All Types</option>
+                    <option value="apartment">Apartment</option>
+                    <option value="house">House</option>
+                    <option value="villa">Villa</option>
+                    <option value="studio">Studio</option>
+                    <option value="penthouse">Penthouse</option>
+                </select>
+                <select id="cityFilter">
+                    <option value="all">All Cities</option>
+                </select>
+            </div>
+
+            <!-- Properties Table -->
+            <div class="properties-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Owner</th>
+                            <th>Type</th>
+                            <th>Rent</th>
+                            <th>Status</th>
+                            <th>Views</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="propertiesTableBody">
+                        <!-- Properties will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Property Details Modal -->
+    <div class="modal-overlay" id="propertyModal">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h2 class="modal-title">Property Details</h2>
+                <button class="modal-close" onclick="closeModal('propertyModal')">×</button>
+            </div>
+            <div class="modal-body" id="propertyModalBody">
+                <!-- Property details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('propertyModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/properties.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    
+    <script>
+        const { protectPage, showToast, formatCurrency } = window.RentalBridgeUtils;
+        const { getProperties, updatePropertyStatus, toggleFeatured, deleteProperty, getPropertyStats } = window.RentalBridgeProperties;
+
+        // Protect page
+        if (!protectPage('admin')) {
+            // Redirected by protectPage
+        }
+
+        let allProperties = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProperties();
+            updateStats();
+            setupFilters();
+            populateCityFilter();
+        });
+
+        // Load properties
+        function loadProperties() {
+            allProperties = getProperties();
+            renderProperties(allProperties);
+        }
+
+        // Render properties
+        function renderProperties(properties) {
+            const tbody = document.getElementById('propertiesTableBody');
+            
+            if (properties.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <h3>No properties found</h3>
+                                <p>No properties match your filters</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = properties.map(prop => `
+                <tr>
+                    <td>
+                        <div class="property-info">
+                            <img src="${prop.images[0] || 'https://via.placeholder.com/60'}" alt="${prop.title}" class="property-thumb">
+                            <div class="property-details">
+                                <h4>${prop.title}</h4>
+                                <p>${prop.city}, ${prop.state}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${prop.ownerName}</td>
+                    <td>${prop.type.charAt(0).toUpperCase() + prop.type.slice(1)}</td>
+                    <td>${formatCurrency(prop.rent)}</td>
+                    <td><span class="status-badge status-${prop.status}">${prop.status}</span></td>
+                    <td>${prop.views}</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="btn-sm btn-view" onclick="viewProperty('${prop.id}')">View</button>
+                            ${prop.status === 'pending' ? `
+                                <button class="btn-sm btn-approve" onclick="approveProperty('${prop.id}')">Approve</button>
+                                <button class="btn-sm btn-reject" onclick="rejectProperty('${prop.id}')">Reject</button>
+                            ` : ''}
+                            <button class="btn-sm btn-delete" onclick="confirmDelete('${prop.id}')">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Update stats
+        function updateStats() {
+            const stats = getPropertyStats();
+            document.getElementById('totalProperties').textContent = stats.total;
+            document.getElementById('pendingProperties').textContent = stats.pending;
+            document.getElementById('approvedProperties').textContent = stats.approved;
+            document.getElementById('rentedProperties').textContent = stats.rented;
+        }
+
+        // Setup filters
+        function setupFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const statusFilter = document.getElementById('statusFilter');
+            const typeFilter = document.getElementById('typeFilter');
+            const cityFilter = document.getElementById('cityFilter');
+
+            searchInput.addEventListener('input', applyFilters);
+            statusFilter.addEventListener('change', applyFilters);
+            typeFilter.addEventListener('change', applyFilters);
+            cityFilter.addEventListener('change', applyFilters);
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            const city = document.getElementById('cityFilter').value;
+
+            let filtered = allProperties;
+
+            if (searchTerm) {
+                filtered = filtered.filter(p => 
+                    p.title.toLowerCase().includes(searchTerm) ||
+                    p.address.toLowerCase().includes(searchTerm) ||
+                    p.ownerName.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (status !== 'all') {
+                filtered = filtered.filter(p => p.status === status);
+            }
+
+            if (type !== 'all') {
+                filtered = filtered.filter(p => p.type === type);
+            }
+
+            if (city !== 'all') {
+                filtered = filtered.filter(p => p.city === city);
+            }
+
+            renderProperties(filtered);
+        }
+
+        // Populate city filter
+        function populateCityFilter() {
+            const cities = [...new Set(allProperties.map(p => p.city))];
+            const cityFilter = document.getElementById('cityFilter');
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                cityFilter.appendChild(option);
+            });
+        }
+
+        // View property details
+        function viewProperty(propertyId) {
+            const property = allProperties.find(p => p.id === propertyId);
+            if (!property) return;
+
+            const modalBody = document.getElementById('propertyModalBody');
+            modalBody.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <img src="${property.images[0]}" style="width: 100%; border-radius: 8px;">
+                        <h3>${property.title}</h3>
+                        <p>${property.description}</p>
+                    </div>
+                    <div>
+                        <h4>Details</h4>
+                        <p><strong>Type:</strong> ${property.type}</p>
+                        <p><strong>Rent:</strong> ${formatCurrency(property.rent)}/month</p>
+                        <p><strong>Deposit:</strong> ${formatCurrency(property.deposit)}</p>
+                        <p><strong>Bedrooms:</strong> ${property.bedrooms}</p>
+                        <p><strong>Bathrooms:</strong> ${property.bathrooms}</p>
+                        <p><strong>Area:</strong> ${property.area} sq ft</p>
+                        <p><strong>Furnished:</strong> ${property.furnished}</p>
+                        <p><strong>Address:</strong> ${property.address}, ${property.city}</p>
+                        <p><strong>Owner:</strong> ${property.ownerName}</p>
+                        <p><strong>Contact:</strong> ${property.ownerPhone}</p>
+                        <p><strong>Status:</strong> <span class="status-badge status-${property.status}">${property.status}</span></p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('propertyModal').classList.add('active');
+        }
+
+        // Approve property
+        function approveProperty(propertyId) {
+            updatePropertyStatus(propertyId, 'approved');
+            showToast('Property approved successfully!', 'success');
+            loadProperties();
+            updateStats();
+        }
+
+        // Reject property
+        function rejectProperty(propertyId) {
+            updatePropertyStatus(propertyId, 'rejected');
+            showToast('Property rejected', 'warning');
+            loadProperties();
+            updateStats();
+        }
+
+        // Confirm delete
+        function confirmDelete(propertyId) {
+            if (confirm('Are you sure you want to delete this property? This action cannot be undone.')) {
+                deleteProperty(propertyId);
+                showToast('Property deleted successfully', 'success');
+                loadProperties();
+                updateStats();
+            }
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = '../../login.html';
+            }
+        }
+    </script>
+</body>
+</html>

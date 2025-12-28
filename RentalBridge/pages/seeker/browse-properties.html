@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Properties - Rental Bridge</title>
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="../../assets/css/cards.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .browse-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-6) var(--space-4)
+        }
+
+        .browse-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: var(--space-8);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-6);
+            text-align: center
+        }
+
+        .browse-header h1 {
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-2)
+        }
+
+        .search-filters {
+            background: rgba(76, 64, 49, 0.92);
+            padding: var(--space-5);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-6)
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-3);
+            margin-bottom: var(--space-3)
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2)
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: var(--gray-700);
+            font-size: var(--text-sm)
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: var(--space-2);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md)
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end
+        }
+
+        .btn-search,
+        .btn-reset {
+            padding: var(--space-2) var(--space-5);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all .2s
+        }
+
+        .btn-search {
+            background: var(--primary-color);
+            color: white
+        }
+
+        .btn-search:hover {
+            background: var(--primary-dark)
+        }
+
+        .btn-reset {
+            background: var(--gray-200);
+            color: var(--gray-700)
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4)
+        }
+
+        .sort-select {
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md)
+        }
+
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--space-5)
+        }
+
+        .property-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all .3s;
+            cursor: pointer;
+            position: relative
+        }
+
+        .property-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl)
+        }
+
+        .property-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover
+        }
+
+        .fav-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            transition: all .2s
+        }
+
+        .fav-btn:hover {
+            transform: scale(1.1)
+        }
+
+        .fav-btn.active {
+            background: var(--error-color);
+            color: white
+        }
+
+        .property-content {
+            padding: var(--space-4)
+        }
+
+        .property-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+            color: var(--gray-900)
+        }
+
+        .property-price {
+            font-size: var(--text-2xl);
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: var(--space-2)
+        }
+
+        .property-location {
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-1)
+        }
+
+        .property-features {
+            display: flex;
+            gap: var(--space-4);
+            color: var(--gray-600);
+            font-size: var(--text-sm);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--gray-200)
+        }
+
+        .property-features span {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1)
+        }
+
+        .no-results {
+            text-align: center;
+            padding: var(--space-16);
+            color: var(--gray-500)
+        }
+
+        .no-results i {
+            font-size: 80px;
+            margin-bottom: var(--space-4)
+        }
+
+        @media(max-width:768px) {
+            .properties-grid {
+                grid-template-columns: 1fr
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* =========================================
+   BROWSE PROPERTIES – DARK GLASS THEME
+   ========================================= */
+
+        /* Page background alignment */
+        .browse-container {
+            padding-top: calc(var(--navbar-height) + var(--space-6));
+            color: #f5f5f4;
+        }
+
+        /* Header */
+        .browse-header {
+            background: linear-gradient(135deg,
+                    #e58735 0%,
+                    #274f9a 50%,
+                    #e69c2d 100%);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* ===============================
+   SEARCH FILTERS (FIXED)
+   =============================== */
+        .search-filters {
+            background: linear-gradient(180deg,
+                    rgba(255, 255, 255, 0.10),
+                    rgba(255, 255, 255, 0.04));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* Labels */
+        .filter-group label {
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        /* Inputs & selects */
+        .filter-group input,
+        .filter-group select,
+        .sort-select {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        .filter-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.35);
+        }
+
+        /* Buttons */
+        .btn-search {
+            background: linear-gradient(135deg,
+                    var(--primary),
+                    var(--primary-dark));
+        }
+
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .btn-reset:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ===============================
+   RESULTS HEADER
+   =============================== */
+        .results-header h2,
+        .results-header span {
+            color: #ffffff;
+        }
+
+        /* ===============================
+   PROPERTY CARDS
+   =============================== */
+        .property-card {
+            background: linear-gradient(180deg,
+                    rgba(255, 255, 255, 0.12),
+                    rgba(255, 255, 255, 0.04));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .property-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+        }
+
+        /* Image overlay polish */
+        .property-img {
+            filter: saturate(1.05);
+        }
+
+        /* Favorite button */
+        .fav-btn {
+            background: rgba(0, 0, 0, 0.55);
+            color: #ffffff;
+        }
+
+        .fav-btn.active {
+            background: var(--primary);
+        }
+
+        /* Card text */
+        .property-title {
+            color: #ffffff;
+        }
+
+        .property-price {
+            color: var(--primary);
+        }
+
+        .property-location,
+        .property-features {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .property-features {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===============================
+   NO RESULTS
+   =============================== */
+        .no-results {
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .no-results i {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ===============================
+   MOBILE FIX
+   =============================== */
+        @media (max-width: 768px) {
+            .search-filters {
+                padding: var(--space-4);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+    <main class="browse-container">
+        <div class="browse-header">
+            <h1 style="font-size: 40px;">Find Your Perfect Home</h1>
+            <center>
+                <p style="font-size: 16px" ;>Explore thousands of rental properties across India</p>
+            </center>
+        </div>
+        <div class="search-filters">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Location</label>
+                    <input type="text" id="filterLocation" placeholder="City or Area">
+                </div>
+                <div class="filter-group">
+                    <label>Property Type</label>
+                    <select id="filterType">
+                        <option value="">All Types</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="house">House</option>
+                        <option value="villa">Villa</option>
+                        <option value="studio">Studio</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Min Price (₹)</label>
+                    <input type="number" id="filterMinPrice" placeholder="10000">
+                </div>
+                <div class="filter-group">
+                    <label>Max Price (₹)</label>
+                    <input type="number" id="filterMaxPrice" placeholder="50000">
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Bedrooms</label>
+                    <select id="filterBedrooms">
+                        <option value="">Any</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Furnishing</label>
+                    <select id="filterFurnishing">
+                        <option value="">Any</option>
+                        <option value="furnished">Furnished</option>
+                        <option value="semi-furnished">Semi-Furnished</option>
+                        <option value="unfurnished">Unfurnished</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="btn-reset" onclick="resetFilters()">Reset</button>
+                <button class="btn-search" onclick="applyFilters()"><i class="fas fa-search"></i> Search</button>
+            </div>
+        </div>
+        <div class="results-header">
+            <h2 id="resultCount">0 Properties Found</h2>
+            <select class="sort-select" id="sortBy" onchange="applyFilters()">
+                <option value="newest">Newest First</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="bedrooms">Bedrooms</option>
+            </select>
+        </div>
+        <div class="properties-grid" id="propertiesGrid"></div>
+    </main>
+    <div id="footer-container"></div>
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/properties.js"></script>
+    <script src="../../assets/js/seeker.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        // Replace the entire <script> section in browse-properties.html with this:
+
+let allProperties = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load navbar and footer
+    await loadComponent('navbar-container', '../../components/navbar.html');
+    await loadComponent('footer-container', '../../components/footer.html');
+    
+    // Get all properties from storage
+    allProperties = getAllProperties();
+    
+    // If no properties, show message
+    if (!allProperties || allProperties.length === 0) {
+        document.getElementById('propertiesGrid').innerHTML = `
+            <div class="no-results" style="grid-column:1/-1">
+                <i class="fas fa-home"></i>
+                <h3>No Properties Available</h3>
+                <p>Check back later for new listings</p>
+            </div>`;
+        return;
+    }
+    
+    applyFilters();
+});
+
+function applyFilters() {
+    let filtered = [...allProperties];
+    
+    const location = document.getElementById('filterLocation').value.toLowerCase();
+    const type = document.getElementById('filterType').value;
+    const minPrice = parseInt(document.getElementById('filterMinPrice').value) || 0;
+    const maxPrice = parseInt(document.getElementById('filterMaxPrice').value) || Infinity;
+    const bedrooms = document.getElementById('filterBedrooms').value;
+    const furnishing = document.getElementById('filterFurnishing').value;
+    
+    // Apply filters
+    if (location) {
+        filtered = filtered.filter(p => 
+            p.location && p.location.toLowerCase().includes(location)
+        );
+    }
+    if (type) {
+        filtered = filtered.filter(p => p.type === type);
+    }
+    if (minPrice) {
+        filtered = filtered.filter(p => p.price >= minPrice);
+    }
+    if (maxPrice !== Infinity) {
+        filtered = filtered.filter(p => p.price <= maxPrice);
+    }
+    if (bedrooms) {
+        filtered = filtered.filter(p => p.bedrooms >= parseInt(bedrooms));
+    }
+    if (furnishing) {
+        filtered = filtered.filter(p => p.furnishing === furnishing);
+    }
+    
+    // Apply sorting
+    const sortBy = document.getElementById('sortBy').value;
+    filtered.sort((a, b) => {
+        if (sortBy === 'price-low') return a.price - b.price;
+        if (sortBy === 'price-high') return b.price - a.price;
+        if (sortBy === 'bedrooms') return b.bedrooms - a.bedrooms;
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+    });
+    
+    displayProperties(filtered);
+}
+
+function displayProperties(properties) {
+    document.getElementById('resultCount').textContent = `${properties.length} Properties Found`;
+    const grid = document.getElementById('propertiesGrid');
+    
+    if (properties.length === 0) {
+        grid.innerHTML = `
+            <div class="no-results" style="grid-column:1/-1">
+                <i class="fas fa-search"></i>
+                <h3>No Properties Found</h3>
+                <p>Try adjusting your filters</p>
+            </div>`;
+        return;
+    }
+    
+    // Get favorites (handle if user not logged in)
+    let favorites = [];
+    try {
+        const user = getCurrentUser();
+        if (user) {
+            const allFavorites = getData(STORAGE_KEYS.FAVORITES);
+            favorites = allFavorites
+                .filter(f => f.userId === user.id)
+                .map(f => f.propertyId);
+        }
+    } catch (e) {
+        console.log('User not logged in');
+    }
+    
+    grid.innerHTML = properties.map(p => `
+        <div class="property-card" onclick="viewProperty(${p.id})">
+            <img src="${p.images?.[0] || 'https://via.placeholder.com/400x300?text=No+Image'}" 
+                 alt="${p.title}" 
+                 class="property-img">
+            <button class="fav-btn ${favorites.includes(p.id) ? 'active' : ''}" 
+                    onclick="toggleFavorite(event, ${p.id})">
+                <i class="fas fa-heart"></i>
+            </button>
+            <div class="property-content">
+                <h3 class="property-title">${p.title}</h3>
+                <div class="property-price">₹${p.price.toLocaleString()}/mo</div>
+                <div class="property-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    ${p.location}
+                </div>
+                <div class="property-features">
+                    <span><i class="fas fa-bed"></i>${p.bedrooms} Beds</span>
+                    <span><i class="fas fa-bath"></i>${p.bathrooms} Baths</span>
+                    <span><i class="fas fa-ruler"></i>${p.area} sqft</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function resetFilters() {
+    document.getElementById('filterLocation').value = '';
+    document.getElementById('filterType').value = '';
+    document.getElementById('filterMinPrice').value = '';
+    document.getElementById('filterMaxPrice').value = '';
+    document.getElementById('filterBedrooms').value = '';
+    document.getElementById('filterFurnishing').value = '';
+    document.getElementById('sortBy').value = 'newest';
+    applyFilters();
+}
+
+function toggleFavorite(event, propertyId) {
+    event.stopPropagation();
+    
+    const user = getCurrentUser();
+    if (!user) {
+        showToast('Please login to add favorites', 'error');
+        setTimeout(() => window.location.href = '../../login.html', 1500);
+        return;
+    }
+    
+    const btn = event.currentTarget;
+    let allFavorites = getData(STORAGE_KEYS.FAVORITES);
+    
+    const exists = allFavorites.find(f => 
+        f.userId === user.id && f.propertyId === propertyId
+    );
+    
+    if (exists) {
+        // Remove from favorites
+        allFavorites = allFavorites.filter(f => 
+            !(f.userId === user.id && f.propertyId === propertyId)
+        );
+        btn.classList.remove('active');
+        showToast('Removed from favorites', 'info');
+    } else {
+        // Add to favorites
+        allFavorites.push({
+            userId: user.id,
+            propertyId: propertyId,
+            createdAt: new Date().toISOString()
+        });
+        btn.classList.add('active');
+        showToast('Added to favorites!', 'success');
+    }
+    
+    setData(STORAGE_KEYS.FAVORITES, allFavorites);
+}
+
+function viewProperty(propertyId) {
+    // Track viewed property
+    const viewedKey = 'rentalBridge_viewed';
+    let viewed = JSON.parse(localStorage.getItem(viewedKey) || '[]');
+    viewed = viewed.filter(id => id !== propertyId);
+    viewed.unshift(propertyId);
+    if (viewed.length > 20) viewed = viewed.slice(0, 20);
+    localStorage.setItem(viewedKey, JSON.stringify(viewed));
+    
+    // Navigate to details page
+    window.location.href = `property-details.html?id=${propertyId}`;
+}
+    </script>
+</body>
+
+</html>

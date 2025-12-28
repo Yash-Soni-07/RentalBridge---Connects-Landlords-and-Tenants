@@ -1,0 +1,112 @@
+/* ============================================
+   RENTAL BRIDGE - CSS VARIABLES (Improved)
+   Property-Themed Design System
+   ============================================ */
+
+:root {
+  /* Primary Brand Colors (Improved contrast) */
+  --primary: #d97706;
+  --primary-dark: #92400e;
+  --primary-light: #fbbf24;
+
+  --secondary: #059669;
+  --secondary-dark: #065f46;
+
+  --accent: #7c3aed;
+
+  /* Neutral System (Better readability) */
+  --dark: #1c1917;
+  --gray: #6b7280;
+  --light-gray: #f5f5f4;
+  --white: #ffffff;
+  --black: #09090b;
+
+  /* Material Metaphors (unchanged meaning, refined tone) */
+  --brick: #b45309;
+  --wood: #92400e;
+  --concrete: #57534e;
+  --glass: #e0f2fe;
+  --metal: #475569;
+
+  /* Status Colors (WCAG safer tones) */
+  --success: #16a34a;
+  --warning: #f59e0b;
+  --error: #dc2626;
+  --info: #0284c7;
+
+  /* Typography */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
+
+  /* Font Sizes */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.25rem;
+  --fs-2xl: 1.5rem;
+  --fs-3xl: 1.875rem;
+  --fs-4xl: 2.25rem;
+  --fs-5xl: 3rem;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+
+  /* Shadows (Cleaner UI depth) */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 20px rgba(0,0,0,0.12);
+  --shadow-xl: 0 20px 30px rgba(0,0,0,0.15);
+  --shadow-2xl: 0 30px 60px rgba(0,0,0,0.2);
+  --shadow-inner: inset 0 2px 4px rgba(0,0,0,0.06);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 300ms ease-in-out;
+  --transition-slow: 500ms ease-in-out;
+
+  /* Layout */
+  --max-width: 1280px;
+  --navbar-height: 75px;
+  --footer-height: 60px;
+
+  /* Z-Index Scale */
+  --z-navbar: 100;
+  --z-dropdown: 1000;
+  --z-modal: 2000;
+  --z-toast: 3000;
+
+  /* Gradients */
+  --gradient-warm: linear-gradient(135deg, #fbbf24 0%, #d97706 50%, #92400e 100%);
+  --gradient-cool: linear-gradient(135deg, #059669 0%, #065f46 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(217,119,6,0.95), rgba(146,64,14,0.95));
+  --gradient-overlay: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.75));
+}
+
+/* Dark Mode (Safe, non-breaking) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --white: #1c1917;
+    --light-gray: #292524;
+    --gray: #a8a29e;
+    --dark: #fafaf9;
+  }
+}

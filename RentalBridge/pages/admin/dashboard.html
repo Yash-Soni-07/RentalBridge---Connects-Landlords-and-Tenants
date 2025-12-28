@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Rental Bridge</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/cards.css">
+    <link rel="stylesheet" href="../../assets/css/modals.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    
+    <style>
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: var(--light-bg);
+        }
+        
+        .dashboard-sidebar {
+            width: 280px;
+            background: var(--white);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .user-role {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--light-bg);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .sidebar-nav a span:first-child {
+            font-size: 1.25rem;
+        }
+        
+        .dashboard-main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-header p {
+            opacity: 0.9;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .content-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .content-card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .recent-properties {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .property-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .property-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .property-thumb {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .property-info {
+            flex: 1;
+        }
+        
+        .property-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .property-info p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .property-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-pending {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .status-approved {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+        
+        .activity-list {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-content h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-content p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .quick-action-btn {
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .quick-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--light-bg);
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-main {
+                margin-left: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h2>🏢 Admin Panel</h2>
+                <p class="user-role">Administrator</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="active">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="manage-properties.html">
+                    <span>🏠</span>
+                    <span>Manage Properties</span>
+                </a>
+                <a href="manage-users.html">
+                    <span>👥</span>
+                    <span>Manage Users</span>
+                </a>
+                <a href="inquiries.html">
+                    <span>📧</span>
+                    <span>Inquiries</span>
+                </a>
+                <a href="../../index.html">
+                    <span>🏠</span>
+                    <span>Back to Home</span>
+                </a>
+                <a href="#" onclick="logout()">
+                    <span>🚪</span>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <h1>Welcome back, Admin! 👋</h1>
+                <p>Here's what's happening with your platform today</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🏠</div>
+                    <div class="stat-label">Total Properties</div>
+                    <div class="stat-value" id="totalProperties">0</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value" id="totalUsers">0</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-label">Pending Approvals</div>
+                    <div class="stat-value" id="pendingApprovals">0</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">📧</div>
+                    <div class="stat-label">New Inquiries</div>
+                    <div class="stat-value" id="newInquiries">0</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Recent Properties -->
+                <div class="content-card">
+                    <h2>🏠 Recent Properties</h2>
+                    <div class="recent-properties" id="recentProperties">
+                        <!-- Properties will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="content-card">
+                    <h2>📋 Recent Activity</h2>
+                    <div class="activity-list" id="activityList">
+                        <!-- Activity will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <a href="manage-properties.html" class="quick-action-btn">
+                    <span>🏠</span>
+                    <span>Manage Properties</span>
+                </a>
+                <a href="manage-users.html" class="quick-action-btn">
+                    <span>👥</span>
+                    <span>Manage Users</span>
+                </a>
+                <a href="inquiries.html" class="quick-action-btn">
+                    <span>📧</span>
+                    <span>View Inquiries</span>
+                </a>
+                <a href="../../index.html" class="quick-action-btn">
+                    <span>🌐</span>
+                    <span>Visit Website</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/properties.js"></script>
+    <script src="../../assets/js/email.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    
+    <script>
+        const { protectPage, formatCurrency, formatRelativeTime, getCurrentUser } = window.RentalBridgeUtils;
+        const { getPropertyStats, getProperties } = window.RentalBridgeProperties;
+        const { getUsers } = window.RentalBridgeAuth;
+        const { getAllInquiries } = window.RentalBridgeEmail;
+
+        // Protect page - only admin can access
+        if (!protectPage('admin')) {
+            // Redirected by protectPage
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardStats();
+            loadRecentProperties();
+            loadRecentActivity();
+            updateUserInfo();
+        });
+
+        // Update user info in sidebar
+        function updateUserInfo() {
+            const user = getCurrentUser();
+            if (user) {
+                document.querySelector('.sidebar-header h2').innerHTML = `🏢 Admin Panel`;
+                document.querySelector('.user-role').textContent = user.name;
+            }
+        }
+
+        // Load dashboard statistics
+        function loadDashboardStats() {
+            const propertyStats = getPropertyStats();
+            const users = getUsers();
+            const inquiries = getAllInquiries();
+            const pendingInquiries = inquiries.filter(i => i.status === 'pending');
+
+            document.getElementById('totalProperties').textContent = propertyStats.total;
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('pendingApprovals').textContent = propertyStats.pending;
+            document.getElementById('newInquiries').textContent = pendingInquiries.length;
+        }
+
+        // Load recent properties
+        function loadRecentProperties() {
+            const properties = getProperties();
+            const recentProperties = properties
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .slice(0, 5);
+
+            const container = document.getElementById('recentProperties');
+
+            if (recentProperties.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light);">No properties yet</p>';
+                return;
+            }
+
+            container.innerHTML = recentProperties.map(prop => `
+                <div class="property-item">
+                    <img src="${prop.images[0] || 'https://via.placeholder.com/80'}" alt="${prop.title}" class="property-thumb">
+                    <div class="property-info">
+                        <h4>${prop.title}</h4>
+                        <p>${prop.city}, ${prop.state}</p>
+                        <p><strong>${formatCurrency(prop.rent)}/month</strong></p>
+                    </div>
+                    <span class="property-status status-${prop.status}">${prop.status}</span>
+                </div>
+            `).join('');
+        }
+
+        // Load recent activity
+        function loadRecentActivity() {
+            const properties = getProperties();
+            const users = getUsers();
+            const inquiries = getAllInquiries();
+
+            const activities = [];
+
+            // Add recent property submissions
+            properties.slice(0, 3).forEach(prop => {
+                activities.push({
+                    icon: '🏠',
+                    title: 'New Property Listed',
+                    description: `${prop.title} by ${prop.ownerName}`,
+                    time: prop.createdAt
+                });
+            });
+
+            // Add recent user registrations
+            users.slice(0, 2).forEach(user => {
+                activities.push({
+                    icon: '👤',
+                    title: 'New User Registered',
+                    description: `${user.name} joined as ${user.role}`,
+                    time: user.createdAt
+                });
+            });
+
+            // Add recent inquiries
+            inquiries.slice(0, 2).forEach(inquiry => {
+                activities.push({
+                    icon: '📧',
+                    title: 'New Inquiry',
+                    description: `${inquiry.seekerName} inquired about ${inquiry.propertyTitle}`,
+                    time: inquiry.createdAt
+                });
+            });
+
+            // Sort by time
+            activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+            const container = document.getElementById('activityList');
+
+            if (activities.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light);">No recent activity</p>';
+                return;
+            }
+
+            container.innerHTML = activities.slice(0, 5).map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">${activity.icon}</div>
+                    <div class="activity-content">
+                        <h4>${activity.title}</h4>
+                        <p>${activity.description}</p>
+                        <p><small>${formatRelativeTime(activity.time)}</small></p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = '../../login.html';
+            }
+        }
+    </script>
+</body>
+</html>

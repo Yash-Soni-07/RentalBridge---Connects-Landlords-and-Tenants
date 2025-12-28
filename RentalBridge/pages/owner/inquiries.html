@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inquiries - Rental Bridge</title>
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===============================
+   OWNER INQUIRIES – DARK UI FIX
+   =============================== */
+
+.inquiries-container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:calc(var(--navbar-height) + var(--space-8)) var(--space-4) var(--space-12);
+  color:#f5f5f4;
+}
+
+/* ---------- HEADER ---------- */
+.page-header{
+  margin-bottom:var(--space-6);
+}
+
+.page-header h1{
+  font-size:var(--text-3xl);
+  color:#ffffff;
+}
+
+/* ---------- FILTERS ---------- */
+.filters{
+  background:rgba(0,0,0,0.35);
+  padding:0.35rem;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.12)
+}
+
+.filter-btn{
+  padding:0.45rem 1rem;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.18);
+  color:#e7e5e4;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:0.85rem;
+  transition:all .2s ease;
+}
+
+.filter-btn:hover{
+  background:rgba(217,119,6,0.15);
+  border-color:var(--primary);
+}
+
+.filter-btn.active{
+  background:var(--primary);
+  color:#000;
+  border-color:var(--primary);
+}
+
+/* ---------- INQUIRY LIST ---------- */
+.inquiry-list{
+  display:flex;
+  flex-direction:column;
+  gap:var(--space-5);
+}
+
+/* ---------- CARD ---------- */
+.inquiry-card{
+  background:rgba(255,255,255,0.05);
+  border-radius:var(--radius-xl);
+  padding:var(--space-6);
+  border:1px solid rgba(255,255,255,0.15);
+  backdrop-filter:blur(10px);
+  transition:all .2s ease;
+}
+
+.inquiry-card:hover{
+  border-color:rgba(217,119,6,0.5);
+  box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* ---------- HEADER ---------- */
+.inquiry-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:var(--space-3);
+}
+
+.inquiry-info h3{
+  font-size:var(--text-lg);
+  color:#ffffff;
+}
+
+/* ---------- META ---------- */
+.inquiry-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--space-4);
+  color:rgba(255,255,255,0.65);
+  font-size:var(--text-sm);
+}
+
+/* ---------- MESSAGE ---------- */
+.inquiry-message{
+  background:rgba(0,0,0,0.35);
+  padding:var(--space-4);
+  border-radius:var(--radius-lg);
+  margin:var(--space-4) 0;
+  color:#e7e5e4;
+  line-height:1.6;
+}
+
+/* ---------- PROPERTY PREVIEW ---------- */
+.inquiry-property{
+  display:flex;
+  align-items:center;
+  gap:var(--space-3);
+  padding:var(--space-3);
+  background:rgba(217,119,6,0.12);
+  border-radius:var(--radius-lg);
+}
+
+.inquiry-property img{
+  width:56px;
+  height:56px;
+  border-radius:var(--radius-md);
+  object-fit:cover;
+}
+
+.inquiry-property-title{
+  color:#ffffff;
+  font-size:0.9rem;
+}
+
+/* ---------- ACTIONS ---------- */
+.inquiry-actions{
+  display:flex;
+  gap:var(--space-2);
+  margin-top:var(--space-4);
+}
+
+.btn-reply{
+  background:var(--primary);
+  color:#000;
+  border:none;
+  padding:0.4rem 0.9rem;
+  border-radius:8px;
+  font-size:0.8rem;
+  cursor:pointer;
+}
+
+.btn-reply:hover{
+  background:#fbbf24;
+}
+
+.btn-delete{
+  background:rgba(239,68,68,0.85);
+  color:#fff;
+  border:none;
+  padding:0.4rem 0.9rem;
+  border-radius:8px;
+  font-size:0.8rem;
+  cursor:pointer;
+}
+
+.btn-delete:hover{
+  background:#dc2626;
+}
+
+/* ---------- STATUS ---------- */
+.inquiry-status{
+  padding:0.25rem 0.7rem;
+  border-radius:999px;
+  font-size:0.65rem;
+  font-weight:600;
+}
+
+.status-new{
+  background:rgba(245,158,11,0.18);
+  color:#fbbf24;
+}
+
+.status-replied{
+  background:rgba(5,150,105,0.18);
+  color:#34d399;
+}
+
+/* ---------- EMPTY STATE ---------- */
+.empty-state{
+  text-align:center;
+  padding:var(--space-16) var(--space-4);
+}
+
+.empty-state i{
+  font-size:72px;
+  color:rgba(255,255,255,0.25);
+}
+
+.empty-state h3{
+  color:#ffffff;
+  margin-bottom:0.5rem;
+}
+
+.empty-state p{
+  color:rgba(255,255,255,0.6);
+}
+
+/* ---------- MOBILE ---------- */
+@media(max-width:768px){
+  .inquiry-header{
+    flex-direction:column;
+    gap:var(--space-2);
+  }
+  .inquiry-actions{
+    flex-direction:column;
+  }
+}
+
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <main class="inquiries-container">
+        <div class="page-header">
+            <h1>Inquiries (<span id="inquiryCount">0</span>)</h1>
+            <p style="color:var(--gray-600)">Manage inquiries from interested renters</p>
+        </div>
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="new">New</button>
+            <button class="filter-btn" data-filter="replied">Replied</button>
+        </div>
+        <div class="inquiry-list" id="inquiryList"></div>
+    </main>
+    <div id="footer-container"></div>
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/properties.js"></script>
+    <script src="../../assets/js/owner.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        let currentFilter='all';
+        document.addEventListener('DOMContentLoaded',async()=>{
+            await loadComponent('navbar-container','../../components/navbar.html');
+            await loadComponent('footer-container','../../components/footer.html');
+            checkOwnerAuth();
+            loadInquiries();
+            document.querySelectorAll('.filter-btn').forEach(btn=>{
+                btn.addEventListener('click',e=>{
+                    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilter=e.target.dataset.filter;
+                    loadInquiries();
+                });
+            });
+        });
+        function loadInquiries(){
+            const inquiries=getAllInquiries();
+            const filtered=currentFilter==='all'?inquiries:inquiries.filter(i=>i.status===currentFilter);
+            document.getElementById('inquiryCount').textContent=filtered.length;
+            const container=document.getElementById('inquiryList');
+            if(filtered.length===0){
+                container.innerHTML=`<div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No Inquiries Found</h3>
+                    <p>You'll see inquiries from interested renters here</p>
+                </div>`;
+                return;
+            }
+            container.innerHTML=filtered.map(inq=>{
+                const property=getOwnerProperties().find(p=>p.id===inq.propertyId);
+                return `
+                <div class="inquiry-card">
+                    <div class="inquiry-header">
+                        <div class="inquiry-info">
+                            <h3>${inq.name}</h3>
+                            <div class="inquiry-meta">
+                                <span><i class="fas fa-envelope"></i> ${inq.email}</span>
+                                <span><i class="fas fa-phone"></i> ${inq.phone}</span>
+                                <span><i class="fas fa-clock"></i> ${formatDate(inq.date)}</span>
+                            </div>
+                        </div>
+                        <span class="inquiry-status status-${inq.status||'new'}">${inq.status||'new'}</span>
+                    </div>
+                    ${property?`
+                    <div class="inquiry-property">
+                        <img src="${property.images?.[0]||'../../assets/images/placeholder.jpg'}" alt="${property.title}">
+                        <div class="inquiry-property-info">
+                            <div class="inquiry-property-title">${property.title}</div>
+                            <div style="color:var(--gray-600);font-size:var(--text-xs)">
+                                ${property.location} • ₹${property.price.toLocaleString()}/mo
+                            </div>
+                        </div>
+                    </div>`:''}
+                    <div class="inquiry-message">
+                        <strong>Message:</strong><br>
+                        ${inq.message}
+                    </div>
+                    <div class="inquiry-actions">
+                        <button class="btn-reply" onclick="replyInquiry('${inq.id}','${inq.email}','${inq.name}')">
+                            <i class="fas fa-reply"></i> Reply via Email
+                        </button>
+                        <button class="btn-delete" onclick="deleteInquiry('${inq.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+        function replyInquiry(id,email,name){
+            const subject=encodeURIComponent('Re: Property Inquiry - Rental Bridge');
+            const body=encodeURIComponent(`Dear ${name},\n\nThank you for your inquiry about the property.\n\nBest regards,\nRental Bridge`);
+            window.location.href=`mailto:${email}?subject=${subject}&body=${body}`;
+            markAsReplied(id);
+        }
+        function markAsReplied(id){
+            const inquiries=getAllInquiries();
+            const index=inquiries.findIndex(i=>i.id===id);
+            if(index!==-1){
+                inquiries[index].status='replied';
+                localStorage.setItem('inquiries',JSON.stringify(inquiries));
+                loadInquiries();
+            }
+        }
+        function deleteInquiry(id){
+            if(confirm('Delete this inquiry?')){
+                const inquiries=getAllInquiries().filter(i=>i.id!==id);
+                localStorage.setItem('inquiries',JSON.stringify(inquiries));
+                showNotification('Inquiry deleted','success');
+                loadInquiries();
+            }
+        }
+    </script>
+</body>
+</html>

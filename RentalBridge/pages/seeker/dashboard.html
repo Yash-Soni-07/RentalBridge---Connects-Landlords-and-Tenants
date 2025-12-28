@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Rental Bridge</title>
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/footer.css">
+    <link rel="stylesheet" href="../../assets/css/cards.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ============================================
+   RENTAL BRIDGE – SEEKER DASHBOARD (IMPROVED)
+   CSS ONLY | NO FUNCTIONAL CHANGES
+   ============================================ */
+
+        .dashboard {
+            max-width: 1400px;
+            margin: calc(var(--navbar-height) + var(--space-6)) auto var(--space-8);
+            padding: 0 var(--space-4);
+        }
+
+        /* Welcome Section */
+        .welcome {
+            background: linear-gradient(135deg,
+                    #3a2614 0%,
+                    #6b4523 55%,
+                    #9e6a3a 100%);
+            color: var(--white);
+            padding: var(--space-8);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .welcome h1 {
+            font-size: var(--fs-3xl);
+            margin-bottom: var(--space-2);
+            font-weight: 700;
+        }
+
+        .welcome p {
+            font-size: var(--fs-lg);
+            opacity: 0.9;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-5);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.96);
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto var(--space-3);
+            background: rgba(217, 119, 6, 0.15);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fs-xl);
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: var(--fs-3xl);
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: var(--space-1);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: var(--fs-sm);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-5);
+            margin-bottom: var(--space-8);
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.96);
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.25s ease;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--primary);
+        }
+
+        .action-card i {
+            font-size: 38px;
+            color: var(--primary);
+            margin-bottom: var(--space-3);
+        }
+
+        .action-card h3 {
+            font-size: var(--fs-lg);
+            margin-bottom: var(--space-2);
+            color: var(--dark);
+        }
+
+        .action-card p {
+            color: var(--gray);
+            font-size: var(--fs-sm);
+        }
+
+        /* Section */
+        .section {
+            background: rgba(255, 255, 255, 0.97);
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-6);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .section-header h2 {
+            font-size: var(--fs-2xl);
+            color: var(--dark);
+        }
+
+        /* Property Grid */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-5);
+        }
+
+        .property-card {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .property-card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                padding: var(--space-6);
+            }
+
+            .welcome h1 {
+                font-size: var(--fs-2xl);
+            }
+        }
+        /* ===============================
+   SEEKER DASHBOARD – DARK GLASS FIX
+   =============================== */
+
+/* Cards base */
+.stat-card,
+.action-card,
+.section {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.10),
+    rgba(255,255,255,0.04)
+  ) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #f5f5f4;
+}
+
+/* Text fixes */
+.stat-value,
+.section-header h2,
+.action-card h3 {
+  color: #ffffff !important;
+}
+
+.stat-label,
+.action-card p {
+  color: rgba(255,255,255,0.65) !important;
+}
+
+/* Icons */
+.stat-icon,
+.action-card i {
+  background: rgba(217,119,6,0.18);
+  color: var(--primary);
+}
+
+/* Hover refinement */
+.stat-card:hover,
+.action-card:hover,
+.property-card:hover {
+  box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+  transform: translateY(-4px);
+}
+
+/* Property cards stay readable */
+.property-card {
+  background: rgba(0,0,0,0.35);
+  border-radius: var(--radius-lg);
+}
+
+/* Remove white bleed on mobile */
+@media (max-width: 768px) {
+  .stat-card,
+  .action-card,
+  .section {
+    background: rgba(0,0,0,0.45) !important;
+  }
+}
+
+    </style>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+    <main class="dashboard">
+        <div class="welcome">
+            <h1>Welcome, <span id="userName">Seeker</span>! 🏠</h1>
+            <p style="font-size:var(--text-lg)">Find your perfect home with Rental Bridge</p>
+        </div>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                <div class="stat-value" id="favCount">0</div>
+                <div class="stat-label">Favorites</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-eye"></i></div>
+                <div class="stat-value" id="viewCount">0</div>
+                <div class="stat-label">Properties Viewed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                <div class="stat-value" id="inquiryCount">0</div>
+                <div class="stat-label">Inquiries Sent</div>
+            </div>
+        </div>
+        <div class="quick-actions">
+            <a href="browse-properties.html" class="action-card">
+                <i class="fas fa-search"></i>
+                <h3>Browse Properties</h3>
+                <p style="color:var(--gray-600)">Explore available rentals</p>
+            </a>
+            <a href="favorites.html" class="action-card">
+                <i class="fas fa-heart"></i>
+                <h3>My Favorites</h3>
+                <p style="color:var(--gray-600)">View saved properties</p>
+            </a>
+            <a href="../../index.html#contact" class="action-card">
+                <i class="fas fa-phone"></i>
+                <h3>Contact Support</h3>
+                <p style="color:var(--gray-600)">Get help anytime</p>
+            </a>
+        </div>
+        <div class="section">
+            <div class="section-header">
+                <h2>Featured Properties</h2>
+                <a href="browse-properties.html" style="color:var(--primary-color);text-decoration:none">View All →</a>
+            </div>
+            <div class="property-grid" id="featuredProperties"></div>
+        </div>
+    </main>
+    <div id="footer-container"></div>
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/properties.js"></script>
+    <script src="../../assets/js/seeker.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadComponent('navbar-container', '../../components/navbar.html');
+            await loadComponent('footer-container', '../../components/footer.html');
+            checkSeekerAuth();
+            loadStats();
+            loadFeaturedProperties();
+        });
+        function loadStats() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('favCount').textContent = getFavorites().length;
+                document.getElementById('viewCount').textContent = getViewedProperties().length;
+                document.getElementById('inquiryCount').textContent = getUserInquiries().length;
+            }
+        }
+        function loadFeaturedProperties() {
+            const properties = getAllProperties().slice(0, 6);
+            const container = document.getElementById('featuredProperties');
+            if (properties.length === 0) {
+                container.innerHTML = '<p style="text-align:center;color:var(--gray-600);grid-column:1/-1">No properties available</p>';
+                return;
+            }
+            container.innerHTML = properties.map(p => `
+                <div class="property-card" onclick="window.location.href='property-details.html?id=${p.id}'">
+                    <img src="${p.images?.[0] || '../../assets/images/placeholder.jpg'}" alt="${p.title}" style="width:100%;height:180px;object-fit:cover;border-radius:var(--radius-lg)">
+                    <div style="padding:var(--space-3)">
+                        <h3 style="font-size:var(--text-base);margin-bottom:var(--space-2);color:var(--gray-900)">${p.title}</h3>
+                        <div style="color:var(--primary-color);font-weight:bold;margin-bottom:var(--space-2)">₹${p.price.toLocaleString()}/mo</div>
+                        <div style="color:var(--gray-600);font-size:var(--text-sm);display:flex;gap:var(--space-3)">
+                            <span><i class="fas fa-bed"></i> ${p.bedrooms}</span>
+                            <span><i class="fas fa-bath"></i> ${p.bathrooms}</span>
+                            <span><i class="fas fa-ruler"></i> ${p.area} sqft</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+
+</html>

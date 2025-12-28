@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - Admin Dashboard - Rental Bridge</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../../assets/css/variables.css">
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/navbar.css">
+    <link rel="stylesheet" href="../../assets/css/cards.css">
+    <link rel="stylesheet" href="../../assets/css/forms.css">
+    <link rel="stylesheet" href="../../assets/css/modals.css">
+    <link rel="stylesheet" href="../../assets/css/responsive.css">
+    
+    <style>
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: var(--light-bg);
+        }
+        
+        .dashboard-sidebar {
+            width: 280px;
+            background: var(--white);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--light-bg);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .dashboard-main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filters select,
+        .filters input {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .users-table {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: var(--light-bg);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .user-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .user-details h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .user-details p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .role-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .role-admin {
+            background: rgba(156, 39, 176, 0.1);
+            color: #9C27B0;
+        }
+        
+        .role-owner {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+        }
+        
+        .role-seeker {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-view {
+            background: var(--info-color);
+            color: var(--white);
+        }
+        
+        .btn-delete {
+            background: var(--error-color);
+            color: var(--white);
+        }
+        
+        .btn-sm:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h2>🏢 Admin Panel</h2>
+                <p class="user-role">Administrator</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="manage-properties.html">
+                    <span>🏠</span>
+                    <span>Manage Properties</span>
+                </a>
+                <a href="manage-users.html" class="active">
+                    <span>👥</span>
+                    <span>Manage Users</span>
+                </a>
+                <a href="inquiries.html">
+                    <span>📧</span>
+                    <span>Inquiries</span>
+                </a>
+                <a href="../../index.html">
+                    <span>🏠</span>
+                    <span>Back to Home</span>
+                </a>
+                <a href="#" onclick="logout()">
+                    <span>🚪</span>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="dashboard-header">
+                <div>
+                    <h1>Manage Users</h1>
+                    <p>View and manage all registered users</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <div class="stat-value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Property Owners</h3>
+                    <div class="stat-value" id="totalOwners">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Property Seekers</h3>
+                    <div class="stat-value" id="totalSeekers">0</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <input type="text" id="searchInput" placeholder="🔍 Search users...">
+                <select id="roleFilter">
+                    <option value="all">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="owner">Property Owner</option>
+                    <option value="seeker">Property Seeker</option>
+                </select>
+            </div>
+
+            <!-- Users Table -->
+            <div class="users-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Registered</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- User Details Modal -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">User Details</h2>
+                <button class="modal-close" onclick="closeModal('userModal')">×</button>
+            </div>
+            <div class="modal-body" id="userModalBody">
+                <!-- User details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('userModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/storage.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/properties.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    
+    <script>
+        const { protectPage, showToast, formatDate } = window.RentalBridgeUtils;
+        const { getUsers, deleteUser } = window.RentalBridgeAuth;
+
+        // Protect page
+        if (!protectPage('admin')) {
+            // Redirected by protectPage
+        }
+
+        let allUsers = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUsers();
+            updateStats();
+            setupFilters();
+        });
+
+        // Load users
+        function loadUsers() {
+            allUsers = getUsers();
+            renderUsers(allUsers);
+        }
+
+        // Render users
+        function renderUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <h3>No users found</h3>
+                                <p>No users match your filters</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">${user.name.charAt(0).toUpperCase()}</div>
+                            <div class="user-details">
+                                <h4>${user.name}</h4>
+                                <p>ID: ${user.id}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${user.email}</td>
+                    <td>${user.phone || 'N/A'}</td>
+                    <td><span class="role-badge role-${user.role}">${user.role}</span></td>
+                    <td>${formatDate(user.createdAt)}</td>
+                    <td>
+                        <div class="table-actions">
+                            <button class="btn-sm btn-view" onclick="viewUser('${user.id}')">View</button>
+                            ${user.role !== 'admin' ? `
+                                <button class="btn-sm btn-delete" onclick="confirmDelete('${user.id}')">Delete</button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Update stats
+        function updateStats() {
+            const owners = allUsers.filter(u => u.role === 'owner');
+            const seekers = allUsers.filter(u => u.role === 'seeker');
+            
+            document.getElementById('totalUsers').textContent = allUsers.length;
+            document.getElementById('totalOwners').textContent = owners.length;
+            document.getElementById('totalSeekers').textContent = seekers.length;
+        }
+
+        // Setup filters
+        function setupFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const roleFilter = document.getElementById('roleFilter');
+
+            searchInput.addEventListener('input', applyFilters);
+            roleFilter.addEventListener('change', applyFilters);
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const role = document.getElementById('roleFilter').value;
+
+            let filtered = allUsers;
+
+            if (searchTerm) {
+                filtered = filtered.filter(u => 
+                    u.name.toLowerCase().includes(searchTerm) ||
+                    u.email.toLowerCase().includes(searchTerm) ||
+                    u.phone?.includes(searchTerm)
+                );
+            }
+
+            if (role !== 'all') {
+                filtered = filtered.filter(u => u.role === role);
+            }
+
+            renderUsers(filtered);
+        }
+
+        // View user details
+        function viewUser(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            const { getPropertiesByOwner } = window.RentalBridgeProperties;
+            const userProperties = user.role === 'owner' ? getPropertiesByOwner(userId) : [];
+
+            const modalBody = document.getElementById('userModalBody');
+            modalBody.innerHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div class="user-avatar" style="width: 100px; height: 100px; font-size: 3rem; margin: 0 auto 1rem;">
+                        ${user.name.charAt(0).toUpperCase()}
+                    </div>
+                    <h3>${user.name}</h3>
+                    <span class="role-badge role-${user.role}">${user.role}</span>
+                </div>
+                
+                <div style="display: grid; gap: 1rem;">
+                    <div>
+                        <strong>Email:</strong> ${user.email}
+                    </div>
+                    <div>
+                        <strong>Phone:</strong> ${user.phone || 'Not provided'}
+                    </div>
+                    <div>
+                        <strong>Registered:</strong> ${formatDate(user.createdAt)}
+                    </div>
+                    ${user.role === 'owner' ? `
+                        <div>
+                            <strong>Properties Listed:</strong> ${userProperties.length}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            document.getElementById('userModal').classList.add('active');
+        }
+
+        // Confirm delete
+        function confirmDelete(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            if (confirm(`Are you sure you want to delete user "${user.name}"? This action cannot be undone.`)) {
+                deleteUser(userId);
+                showToast('User deleted successfully', 'success');
+                loadUsers();
+                updateStats();
+            }
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = '../../login.html';
+            }
+        }
+    </script>
+</body>
+</html>
