@@ -1,6 +1,6 @@
 /* ============================================
-   RENTAL BRIDGE - NAVBAR
-   Property-Themed Navigation - FINAL FIX
+   RENTAL BRIDGE - NAVBAR CSS
+   Property-Themed Navigation - PERFECT FIX
    ============================================ */
 
 .navbar {
@@ -196,20 +196,24 @@
   transform: translateX(5px);
 }
 
-/* Mobile Toggle - HIDDEN BY DEFAULT */
+/* ==========================================
+   MOBILE TOGGLE - MATCHES navbar.html STRUCTURE
+   3 actual <span> elements, NOT pseudo-elements
+   ========================================== */
 .mobile-toggle {
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 5px;
   width: 40px;
   height: 40px;
   background: linear-gradient(135deg, #f5f5f4 0%, rgba(217, 119, 6, 0.1) 100%);
-  border: 2px solid transparent;
+  border: 2px solid rgba(217, 119, 6, 0.2);
   border-radius: 0.5rem;
   cursor: pointer;
-  padding: 0;
-  transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 8px;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mobile-toggle:hover {
@@ -218,54 +222,41 @@
   transform: scale(1.05);
 }
 
-.hamburger,
-.hamburger::before,
-.hamburger::after {
+/* The 3 hamburger lines (actual span elements) */
+.hamburger {
   width: 24px;
-  height: 3px;
+  height: 2px;
   background: #292524;
-  border-radius: 0.25rem;
-  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
 }
 
-.mobile-toggle:hover .hamburger,
-.mobile-toggle:hover .hamburger::before,
-.mobile-toggle:hover .hamburger::after {
+.mobile-toggle:hover .hamburger {
   background: #fafaf9;
 }
 
-.hamburger {
-  position: relative;
-}
-
-.hamburger::before,
-.hamburger::after {
-  content: '';
-  position: absolute;
-  left: 0;
-}
-
-.hamburger::before { top: -8px; }
-.hamburger::after { bottom: -8px; }
-
+/* Active state - X shape */
 .mobile-toggle.active {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  border-color: #d97706;
 }
 
 .mobile-toggle.active .hamburger {
-  background: transparent;
-}
-
-.mobile-toggle.active .hamburger::before {
-  transform: rotate(45deg);
-  top: 0;
   background: #fafaf9;
 }
 
-.mobile-toggle.active .hamburger::after {
-  transform: rotate(-45deg);
-  bottom: 0;
-  background: #fafaf9;
+.mobile-toggle.active .hamburger:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.mobile-toggle.active .hamburger:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.mobile-toggle.active .hamburger:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 /* Responsive - Mobile Only */

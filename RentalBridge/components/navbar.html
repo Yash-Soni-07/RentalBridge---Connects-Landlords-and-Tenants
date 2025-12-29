@@ -50,7 +50,7 @@
 
 <style>
 /* ==========================================
-   NAVBAR LIGHTER THEME STYLES
+   NAVBAR STYLES - PERFECT HAMBURGER FIX
    ========================================== */
 
 .navbar {
@@ -66,11 +66,6 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
   transition: all 0.3s ease !important;
-}
-
-.navbar.scrolled {
-  background: rgba(40, 40, 40, 0.98) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
 }
 
 .navbar-container {
@@ -116,11 +111,8 @@
 
 .navbar-menu li {
   margin: 0 !important;
+  list-style: none !important;
 }
-
-/* ===============================
-   NAV LINK – FIXED UNDERLINE
-   =============================== */
 
 .nav-link {
   color: rgba(255, 255, 255, 0.95) !important;
@@ -129,23 +121,18 @@
   font-size: 1rem !important;
   position: relative !important;
   padding: 0.5rem 0 !important;
-  line-height: 1 !important;          /* CRITICAL */
+  line-height: 1 !important;
+  display: inline-block !important;
 }
 
-/* underline */
 .nav-link::after {
   content: '' !important;
   position: absolute !important;
   left: 50% !important;
-  bottom: -6px !important;            /* locked position */
+  bottom: -6px !important;
   width: 0 !important;
   height: 2px !important;
-  background: linear-gradient(
-    135deg,
-    #f59e0b,
-    #d97706,
-    #b45309
-  ) !important;
+  background: linear-gradient(135deg, #f59e0b, #d97706, #b45309) !important;
   transform: translateX(-50%) !important;
   transition: width 0.25s ease !important;
   border-radius: 999px !important;
@@ -156,23 +143,6 @@
 }
 
 .nav-link:hover::after,
-.nav-link.active::after {
-  width: 70% !important;
-}
-
-
-.nav-link:hover {
-  color: #f59e0b !important;
-}
-
-.nav-link:hover::after {
-  width: 100% !important;
-}
-
-.nav-link.active {
-  color: #f59e0b !important;
-}
-
 .nav-link.active::after {
   width: 100% !important;
 }
@@ -259,6 +229,7 @@
   min-width: 180px !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
   overflow: hidden !important;
+  z-index: 1001 !important;
 }
 
 .dropdown-item {
@@ -284,25 +255,67 @@
   display: none !important;
 }
 
+/* ==========================================
+   MOBILE TOGGLE - PERFECT HAMBURGER
+   ========================================== */
 .mobile-toggle {
   display: none !important;
   flex-direction: column !important;
-  gap: 4px !important;
-  background: none !important;
-  border: none !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 5px !important;
+  width: 40px !important;
+  height: 40px !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 2px solid rgba(245, 158, 11, 0.3) !important;
+  border-radius: 8px !important;
   cursor: pointer !important;
-  padding: 0.5rem !important;
+  padding: 8px !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+}
+
+.mobile-toggle:hover {
+  background: rgba(245, 158, 11, 0.2) !important;
+  border-color: #f59e0b !important;
 }
 
 .hamburger {
-  width: 25px !important;
-  height: 3px !important;
+  width: 22px !important;
+  height: 2px !important;
   background: #f59e0b !important;
   border-radius: 2px !important;
   transition: all 0.3s ease !important;
+  display: block !important;
 }
 
+/* Hamburger Animation */
+.mobile-toggle.active {
+  background: rgba(245, 158, 11, 0.25) !important;
+  border-color: #f59e0b !important;
+}
+
+.mobile-toggle.active .hamburger:nth-child(1) {
+  transform: translateY(7px) rotate(45deg) !important;
+}
+
+.mobile-toggle.active .hamburger:nth-child(2) {
+  opacity: 0 !important;
+  transform: translateX(-20px) !important;
+}
+
+.mobile-toggle.active .hamburger:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg) !important;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE
+   ========================================== */
 @media (max-width: 968px) {
+  .navbar-container {
+    padding: 0 1rem !important;
+  }
+
   .navbar-menu {
     position: absolute !important;
     top: 100% !important;
@@ -313,11 +326,16 @@
     gap: 0 !important;
     padding: 1rem 0 !important;
     border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3) !important;
     display: none !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease !important;
   }
   
   .navbar-menu.active {
     display: flex !important;
+    max-height: 500px !important;
   }
   
   .navbar-menu li {
@@ -329,48 +347,34 @@
   .nav-link {
     display: block !important;
     padding: 1rem !important;
+    width: 100% !important;
+  }
+  
+  .nav-link::after {
+    display: none !important;
   }
   
   .mobile-toggle {
     display: flex !important;
   }
   
-  .mobile-toggle.active .hamburger:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px) !important;
-  }
-  
-  .mobile-toggle.active .hamburger:nth-child(2) {
-    opacity: 0 !important;
-  }
-  
-  .mobile-toggle.active .hamburger:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px) !important;
-  }
-}
-/* Add this before the existing @media (max-width: 968px) */
-
-@media (max-width: 968px) {
-  .navbar-container {
-    padding: 0 1rem !important; /* Reduce padding on mobile */
-  }
-  
   .auth-buttons {
-    flex-direction: row !important; /* Keep buttons side by side */
-    gap: 0.5rem !important; /* Reduce gap */
+    flex-direction: row !important;
+    gap: 0.5rem !important;
   }
   
   .btn {
-    padding: 0.5rem 1rem !important; /* Smaller padding */
-    font-size: 0.85rem !important; /* Smaller text */
-    white-space: nowrap !important; /* Prevent text wrapping */
+    padding: 0.5rem 1rem !important;
+    font-size: 0.85rem !important;
+    white-space: nowrap !important;
   }
   
   .logo-text {
-    font-size: 1.2rem !important; /* Smaller logo text */
+    font-size: 1.2rem !important;
   }
   
   .logo-icon {
-    font-size: 1.5rem !important; /* Smaller logo icon */
+    font-size: 1.5rem !important;
   }
 }
 
@@ -391,6 +395,19 @@
   
   .logo-text {
     font-size: 1rem !important;
+  }
+
+  .logo-icon {
+    font-size: 1.3rem !important;
+  }
+
+  .mobile-toggle {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .hamburger {
+    width: 20px !important;
   }
 }
 </style>
