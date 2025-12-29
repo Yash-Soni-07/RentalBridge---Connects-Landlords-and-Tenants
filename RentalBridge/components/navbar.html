@@ -347,6 +347,52 @@
     transform: rotate(-45deg) translate(7px, -6px) !important;
   }
 }
+/* Add this before the existing @media (max-width: 968px) */
+
+@media (max-width: 968px) {
+  .navbar-container {
+    padding: 0 1rem !important; /* Reduce padding on mobile */
+  }
+  
+  .auth-buttons {
+    flex-direction: row !important; /* Keep buttons side by side */
+    gap: 0.5rem !important; /* Reduce gap */
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem !important; /* Smaller padding */
+    font-size: 0.85rem !important; /* Smaller text */
+    white-space: nowrap !important; /* Prevent text wrapping */
+  }
+  
+  .logo-text {
+    font-size: 1.2rem !important; /* Smaller logo text */
+  }
+  
+  .logo-icon {
+    font-size: 1.5rem !important; /* Smaller logo icon */
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0 0.75rem !important;
+  }
+  
+  .auth-buttons {
+    gap: 0.25rem !important;
+  }
+  
+  .btn {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .logo-text {
+    font-size: 1rem !important;
+  }
+}
 </style>
 
 <script>
