@@ -67,7 +67,7 @@ const initSampleProperties = () => {
                 area: 850,
                 furnished: 'semi-furnished',
                 amenities: ['parking', 'lift', 'security', 'power_backup', 'gym'],
-                images: ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80'],
+                images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
                 availableFrom: '2025-02-01',
                 ownerId: 'owner_mumbai_1',
                 ownerName: 'Rajesh Sharma',

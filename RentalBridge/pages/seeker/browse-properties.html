@@ -548,9 +548,11 @@ function displayProperties(properties) {
     
     grid.innerHTML = properties.map(p => `
         <div class="property-card" onclick="viewProperty('${p.id}')">
-            <img src="${p.images?.[0] || 'https://via.placeholder.com/400x300?text=No+Image'}" 
-                 alt="${p.title}" 
-                 class="property-img">
+            <img src="${p.images?.[0]}" 
+     alt="${p.title}" 
+     class="property-img"
+     referrerpolicy="no-referrer"
+     onerror="this.src='https://placehold.co/400x300?text=No+Image'">
             <button class="fav-btn ${favorites.includes(p.id) ? 'active' : ''}" 
                     onclick="toggleFavorite(event, '${p.id}')">
                 <i class="fas fa-heart"></i>

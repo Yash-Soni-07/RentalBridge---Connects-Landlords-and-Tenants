@@ -379,7 +379,9 @@
 
             // Display main image
             if (p.images && p.images.length > 0) {
-                document.getElementById('mainImage').src = p.images[0];
+                const img = document.getElementById('mainImage');
+                img.referrerPolicy = 'no-referrer';
+                img.src = p.images[0];
             } else {
                 document.getElementById('mainImage').src = 'https://via.placeholder.com/800x500?text=No+Image';
             }
