@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const basePath = getBasePath();
   
   // Load navbar with callback
-  loadComponent('navbar-placeholder', basePath + 'components/navbar.html', () => {
+  loadComponent('navbar', basePath + 'components/navbar.html', () => {
     console.log('Navbar loaded, setting up navigation...'); // Debug
     
     // Setup all navbar functionality
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   // Load footer
-  loadComponent('footer-placeholder', basePath + 'components/footer.html');
+  loadComponent('footer', basePath + 'components/footer.html');
 });
 
 // Load HTML components with callback

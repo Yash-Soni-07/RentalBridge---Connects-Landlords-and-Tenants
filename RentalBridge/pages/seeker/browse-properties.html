@@ -376,7 +376,7 @@
 </head>
 
 <body>
-    <div id="navbar-container"></div>
+    <div id="navbar"></div>
     <main class="browse-container">
         <div class="browse-header">
             <h1 style="font-size: 40px; color: rgb(255, 193, 48);">Find Your Perfect Home</h1>
@@ -446,7 +446,7 @@
         </div>
         <div class="properties-grid" id="propertiesGrid"></div>
     </main>
-    <div id="footer-container"></div>
+    <div id="footer"></div>
     <script src="../../assets/js/storage.js"></script>
     <script src="../../assets/js/auth.js"></script>
     <script src="../../assets/js/properties.js"></script>
@@ -460,8 +460,8 @@ let allProperties = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Load navbar and footer
-    await loadComponent('navbar-container', '../../components/navbar.html');
-    await loadComponent('footer-container', '../../components/footer.html');
+    await loadComponent('navbar', '../../components/navbar.html');
+    await loadComponent('footer', '../../components/footer.html');
     
     // Get all properties from storage
     allProperties = getAllProperties();
@@ -499,18 +499,12 @@ function applyFilters() {
     if (type) {
         filtered = filtered.filter(p => p.type === type);
     }
-    if (minPrice) {
-        filtered = filtered.filter(p => p.price >= minPrice);
-    }
-    if (maxPrice !== Infinity) {
-        filtered = filtered.filter(p => p.price <= maxPrice);
-    }
+    if (minPrice) filtered = filtered.filter(p => p.rent >= minPrice);
+if (maxPrice !== Infinity) filtered = filtered.filter(p => p.rent <= maxPrice);
     if (bedrooms) {
         filtered = filtered.filter(p => p.bedrooms >= parseInt(bedrooms));
     }
-    if (furnishing) {
-        filtered = filtered.filter(p => p.furnishing === furnishing);
-    }
+    if (furnishing) filtered = filtered.filter(p => p.furnished === furnishing);
     
     // Apply sorting
     const sortBy = document.getElementById('sortBy').value;
@@ -553,20 +547,20 @@ function displayProperties(properties) {
     }
     
     grid.innerHTML = properties.map(p => `
-        <div class="property-card" onclick="viewProperty(${p.id})">
+        <div class="property-card" onclick="viewProperty('${p.id}')">
             <img src="${p.images?.[0] || 'https://via.placeholder.com/400x300?text=No+Image'}" 
                  alt="${p.title}" 
                  class="property-img">
             <button class="fav-btn ${favorites.includes(p.id) ? 'active' : ''}" 
-                    onclick="toggleFavorite(event, ${p.id})">
+                    onclick="toggleFavorite(event, '${p.id}')">
                 <i class="fas fa-heart"></i>
             </button>
             <div class="property-content">
                 <h3 class="property-title">${p.title}</h3>
-                <div class="property-price">₹${p.price.toLocaleString()}/mo</div>
+                <div class="property-price">₹${p.rent.toLocaleString()}/mo</div>
                 <div class="property-location">
                     <i class="fas fa-map-marker-alt"></i>
-                    ${p.location}
+                    ${p.address}, ${p.city}
                 </div>
                 <div class="property-features">
                     <span><i class="fas fa-bed"></i>${p.bedrooms} Beds</span>

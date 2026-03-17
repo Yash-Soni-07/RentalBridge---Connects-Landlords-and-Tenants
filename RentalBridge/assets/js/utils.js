@@ -1,3 +1,8 @@
+// Guard against duplicate loading
+if (window.RentalBridgeUtilsLoaded) {
+    console.log('⚠️ utils.js already loaded, skipping...');
+} else {
+    window.RentalBridgeUtilsLoaded = true;
 // ==========================================
 // RENTAL BRIDGE - UTILITY FUNCTIONS
 // ==========================================
@@ -413,3 +418,4 @@ window.RentalBridgeUtils = {
     getQueryParam,
     updateQueryParam
 };
+} // End of guard check

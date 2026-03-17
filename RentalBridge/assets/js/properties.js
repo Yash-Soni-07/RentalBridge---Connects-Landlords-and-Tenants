@@ -1,13 +1,22 @@
 // ==========================================
+// GUARD: Prevent duplicate loading
+// ==========================================
+if (window.RentalBridgePropertiesLoaded) {
+    console.log('⚠️ properties.js already loaded, skipping...');
+} else {
+    window.RentalBridgePropertiesLoaded = true;
+
+// ==========================================
 // RENTAL BRIDGE - PROPERTY MANAGEMENT
+// Complete with 25 Indian Properties
 // ==========================================
 
-// Property data structure example
+// Property data structure template
 const propertyTemplate = {
     id: '',
     title: '',
     description: '',
-    type: '', // apartment, house, villa, studio, penthouse, duplex, room
+    type: '',
     rent: 0,
     deposit: 0,
     address: '',
@@ -16,16 +25,16 @@ const propertyTemplate = {
     pincode: '',
     bedrooms: 0,
     bathrooms: 0,
-    area: 0, // in sq ft
-    furnished: '', // furnished, semi-furnished, unfurnished
-    amenities: [], // parking, gym, pool, wifi, ac, etc.
-    images: [], // array of image URLs (base64)
+    area: 0,
+    furnished: '',
+    amenities: [],
+    images: [],
     availableFrom: '',
     ownerId: '',
     ownerName: '',
     ownerEmail: '',
     ownerPhone: '',
-    status: 'pending', // pending, approved, rented, rejected
+    status: 'pending',
     featured: false,
     views: 0,
     rating: 0,
@@ -34,146 +43,816 @@ const propertyTemplate = {
     updatedAt: ''
 };
 
-// Initialize sample properties (for demo)
+// Initialize 25 Indian properties
 const initSampleProperties = () => {
-    const properties = getProperties();
+    const storedProps = localStorage.getItem('properties');
+    const properties = storedProps ? JSON.parse(storedProps) : [];
+    
     if (properties.length === 0) {
-        const sampleProperties = [
+        const indianProperties = [
+            // MUMBAI - 5 Properties
             {
-                id: 'prop_1',
-                title: '2BHK Luxury Apartment in City Center',
-                description: 'Spacious 2BHK apartment with modern amenities in the heart of the city. Perfect for small families or working professionals.',
+                id: 'mumbai_001',
+                title: '2BHK Spacious Apartment in Andheri West',
+                description: 'Well-ventilated 2BHK flat in prime Andheri West location. Close to Metro station, malls, and restaurants.',
                 type: 'apartment',
-                rent: 25000,
-                deposit: 50000,
-                address: 'Tower A, Sunshine Residency, Ring Road',
-                city: 'Surat',
-                state: 'Gujarat',
-                pincode: '395007',
+                rent: 45000,
+                deposit: 135000,
+                address: 'Tower B, Lokhandwala Complex, Andheri West',
+                city: 'Mumbai',
+                state: 'Maharashtra',
+                pincode: '400053',
                 bedrooms: 2,
                 bathrooms: 2,
-                area: 1200,
-                furnished: 'furnished',
-                amenities: ['parking', 'gym', 'pool', 'wifi', 'ac', 'lift', 'security'],
+                area: 850,
+                furnished: 'semi-furnished',
+                amenities: ['parking', 'lift', 'security', 'power_backup', 'gym'],
                 images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
-                availableFrom: '2025-01-15',
-                ownerId: 'owner_1',
-                ownerName: 'Rajesh Kumar',
-                ownerEmail: 'rajesh@example.com',
+                availableFrom: '2025-02-01',
+                ownerId: 'owner_mumbai_1',
+                ownerName: 'Rajesh Sharma',
+                ownerEmail: 'rajesh.mumbai@example.com',
                 ownerPhone: '9876543210',
                 status: 'approved',
                 featured: true,
-                views: 156,
-                rating: 4.5,
+                views: 245,
+                rating: 4.6,
                 reviews: [],
-                createdAt: new Date('2024-12-01').toISOString(),
-                updatedAt: new Date('2024-12-01').toISOString()
+                createdAt: new Date('2024-12-15').toISOString(),
+                updatedAt: new Date('2024-12-15').toISOString()
             },
             {
-                id: 'prop_2',
-                title: '3BHK Independent House with Garden',
-                description: 'Beautiful independent house with a private garden. Ideal for families looking for peaceful living.',
-                type: 'house',
-                rent: 35000,
-                deposit: 70000,
-                address: 'Plot 45, Green Valley Society, Vesu',
-                city: 'Surat',
-                state: 'Gujarat',
-                pincode: '395007',
+                id: 'mumbai_002',
+                title: '1BHK Compact Flat near Bandra Station',
+                description: 'Cozy 1BHK perfect for bachelors or young couples.',
+                type: 'apartment',
+                rent: 32000,
+                deposit: 96000,
+                address: 'Hill Road, Bandra West',
+                city: 'Mumbai',
+                state: 'Maharashtra',
+                pincode: '400050',
+                bedrooms: 1,
+                bathrooms: 1,
+                area: 550,
+                furnished: 'furnished',
+                amenities: ['parking', 'lift', 'wifi'],
+                images: ['https://images.unsplash.com/photo-1502672260066-6bc54fc99ebe?w=800'],
+                availableFrom: '2025-01-20',
+                ownerId: 'owner_mumbai_2',
+                ownerName: 'Priya Desai',
+                ownerEmail: 'priya.mumbai@example.com',
+                ownerPhone: '9876543211',
+                status: 'approved',
+                featured: true,
+                views: 189,
+                rating: 4.4,
+                reviews: [],
+                createdAt: new Date('2024-12-18').toISOString(),
+                updatedAt: new Date('2024-12-18').toISOString()
+            },
+            {
+                id: 'mumbai_003',
+                title: '3BHK Sea-Facing Apartment in Worli',
+                description: 'Luxurious 3BHK with stunning sea view.',
+                type: 'apartment',
+                rent: 95000,
+                deposit: 285000,
+                address: 'Worli Sea Face',
+                city: 'Mumbai',
+                state: 'Maharashtra',
+                pincode: '400018',
+                bedrooms: 3,
+                bathrooms: 3,
+                area: 1450,
+                furnished: 'semi-furnished',
+                amenities: ['parking', 'pool', 'gym', 'security'],
+                images: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'],
+                availableFrom: '2025-03-01',
+                ownerId: 'owner_mumbai_1',
+                ownerName: 'Rajesh Sharma',
+                ownerEmail: 'rajesh.mumbai@example.com',
+                ownerPhone: '9876543210',
+                status: 'approved',
+                featured: true,
+                views: 312,
+                rating: 4.8,
+                reviews: [],
+                createdAt: new Date('2024-12-10').toISOString(),
+                updatedAt: new Date('2024-12-10').toISOString()
+            },
+            {
+                id: 'mumbai_004',
+                title: 'Studio Apartment in Powai',
+                description: 'Modern studio near Hiranandani.',
+                type: 'studio',
+                rent: 28000,
+                deposit: 84000,
+                address: 'Hiranandani Gardens',
+                city: 'Mumbai',
+                state: 'Maharashtra',
+                pincode: '400076',
+                bedrooms: 1,
+                bathrooms: 1,
+                area: 450,
+                furnished: 'furnished',
+                amenities: ['parking', 'gym', 'wifi'],
+                images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
+                availableFrom: '2025-01-15',
+                ownerId: 'owner_mumbai_3',
+                ownerName: 'Amit Patel',
+                ownerEmail: 'amit.mumbai@example.com',
+                ownerPhone: '9876543212',
+                status: 'approved',
+                featured: false,
+                views: 156,
+                rating: 4.3,
+                reviews: [],
+                createdAt: new Date('2024-12-20').toISOString(),
+                updatedAt: new Date('2024-12-20').toISOString()
+            },
+            {
+                id: 'mumbai_005',
+                title: '2BHK Budget Apartment in Thane',
+                description: 'Affordable 2BHK in Thane West.',
+                type: 'apartment',
+                rent: 22000,
+                deposit: 66000,
+                address: 'Ghodbunder Road',
+                city: 'Mumbai',
+                state: 'Maharashtra',
+                pincode: '400615',
+                bedrooms: 2,
+                bathrooms: 2,
+                area: 750,
+                furnished: 'unfurnished',
+                amenities: ['parking', 'lift'],
+                images: ['https://images.unsplash.com/photo-1560185127-6a7e6c6a3f7c?w=800'],
+                availableFrom: '2025-02-10',
+                ownerId: 'owner_mumbai_2',
+                ownerName: 'Priya Desai',
+                ownerEmail: 'priya.mumbai@example.com',
+                ownerPhone: '9876543211',
+                status: 'approved',
+                featured: false,
+                views: 98,
+                rating: 4.1,
+                reviews: [],
+                createdAt: new Date('2024-12-22').toISOString(),
+                updatedAt: new Date('2024-12-22').toISOString()
+            },
+
+            // BANGALORE - 5 Properties
+            {
+                id: 'bangalore_001',
+                title: '3BHK Villa in Whitefield',
+                description: 'Independent villa in gated community.',
+                type: 'villa',
+                rent: 65000,
+                deposit: 195000,
+                address: 'Whitefield',
+                city: 'Bangalore',
+                state: 'Karnataka',
+                pincode: '560066',
                 bedrooms: 3,
                 bathrooms: 3,
                 area: 2000,
                 furnished: 'semi-furnished',
-                amenities: ['parking', 'garden', 'wifi', 'security'],
+                amenities: ['parking', 'garden', 'pool'],
                 images: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800'],
-                availableFrom: '2025-02-01',
-                ownerId: 'owner_2',
-                ownerName: 'Priya Sharma',
-                ownerEmail: 'priya@example.com',
-                ownerPhone: '9876543211',
+                availableFrom: '2025-02-15',
+                ownerId: 'owner_bangalore_1',
+                ownerName: 'Suresh Kumar',
+                ownerEmail: 'suresh.bangalore@example.com',
+                ownerPhone: '9876543220',
                 status: 'approved',
                 featured: true,
-                views: 98,
+                views: 278,
+                rating: 4.7,
+                reviews: [],
+                createdAt: new Date('2024-12-12').toISOString(),
+                updatedAt: new Date('2024-12-12').toISOString()
+            },
+            {
+                id: 'bangalore_002',
+                title: '2BHK Flat in Koramangala',
+                description: 'Well-maintained 2BHK.',
+                type: 'apartment',
+                rent: 38000,
+                deposit: 114000,
+                address: '5th Block, Koramangala',
+                city: 'Bangalore',
+                state: 'Karnataka',
+                pincode: '560095',
+                bedrooms: 2,
+                bathrooms: 2,
+                area: 950,
+                furnished: 'furnished',
+                amenities: ['parking', 'wifi'],
+                images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
+                availableFrom: '2025-01-25',
+                ownerId: 'owner_bangalore_2',
+                ownerName: 'Lakshmi Reddy',
+                ownerEmail: 'lakshmi.bangalore@example.com',
+                ownerPhone: '9876543221',
+                status: 'approved',
+                featured: true,
+                views: 234,
+                rating: 4.5,
+                reviews: [],
+                createdAt: new Date('2024-12-16').toISOString(),
+                updatedAt: new Date('2024-12-16').toISOString()
+            },
+            {
+                id: 'bangalore_003',
+                title: '1BHK in Electronic City',
+                description: 'Affordable near IT parks.',
+                type: 'apartment',
+                rent: 15000,
+                deposit: 45000,
+                address: 'Electronic City Phase 1',
+                city: 'Bangalore',
+                state: 'Karnataka',
+                pincode: '560100',
+                bedrooms: 1,
+                bathrooms: 1,
+                area: 600,
+                furnished: 'semi-furnished',
+                amenities: ['parking'],
+                images: ['https://images.unsplash.com/photo-1502672260066-6bc54fc99ebe?w=800'],
+                availableFrom: '2025-01-18',
+                ownerId: 'owner_bangalore_3',
+                ownerName: 'Venkat Rao',
+                ownerEmail: 'venkat.bangalore@example.com',
+                ownerPhone: '9876543222',
+                status: 'approved',
+                featured: false,
+                views: 145,
+                rating: 4.2,
+                reviews: [],
+                createdAt: new Date('2024-12-19').toISOString(),
+                updatedAt: new Date('2024-12-19').toISOString()
+            },
+            {
+                id: 'bangalore_004',
+                title: '4BHK Penthouse Indiranagar',
+                description: 'Luxury penthouse.',
+                type: 'penthouse',
+                rent: 120000,
+                deposit: 360000,
+                address: 'Indiranagar',
+                city: 'Bangalore',
+                state: 'Karnataka',
+                pincode: '560038',
+                bedrooms: 4,
+                bathrooms: 4,
+                area: 2800,
+                furnished: 'furnished',
+                amenities: ['parking', 'pool', 'gym'],
+                images: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'],
+                availableFrom: '2025-03-10',
+                ownerId: 'owner_bangalore_1',
+                ownerName: 'Suresh Kumar',
+                ownerEmail: 'suresh.bangalore@example.com',
+                ownerPhone: '9876543220',
+                status: 'approved',
+                featured: true,
+                views: 387,
+                rating: 4.9,
+                reviews: [],
+                createdAt: new Date('2024-12-08').toISOString(),
+                updatedAt: new Date('2024-12-08').toISOString()
+            },
+            {
+                id: 'bangalore_005',
+                title: '2BHK HSR Layout',
+                description: 'Garden apartment.',
+                type: 'apartment',
+                rent: 32000,
+                deposit: 96000,
+                address: 'HSR Layout Sector 2',
+                city: 'Bangalore',
+                state: 'Karnataka',
+                pincode: '560102',
+                bedrooms: 2,
+                bathrooms: 2,
+                area: 1050,
+                furnished: 'semi-furnished',
+                amenities: ['parking', 'garden'],
+                images: ['https://images.unsplash.com/photo-1560185127-6a7e6c6a3f7c?w=800'],
+                availableFrom: '2025-02-05',
+                ownerId: 'owner_bangalore_2',
+                ownerName: 'Lakshmi Reddy',
+                ownerEmail: 'lakshmi.bangalore@example.com',
+                ownerPhone: '9876543221',
+                status: 'approved',
+                featured: false,
+                views: 167,
+                rating: 4.4,
+                reviews: [],
+                createdAt: new Date('2024-12-17').toISOString(),
+                updatedAt: new Date('2024-12-17').toISOString()
+            },
+
+            // DELHI - 5 Properties
+            {
+                id: 'delhi_001',
+                title: '3BHK Greater Kailash',
+                description: 'Builder floor in GK.',
+                type: 'house',
+                rent: 75000,
+                deposit: 225000,
+                address: 'M Block, GK-1',
+                city: 'Delhi',
+                state: 'Delhi',
+                pincode: '110048',
+                bedrooms: 3,
+                bathrooms: 3,
+                area: 1800,
+                furnished: 'semi-furnished',
+                amenities: ['parking', 'garden'],
+                images: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800'],
+                availableFrom: '2025-02-20',
+                ownerId: 'owner_delhi_1',
+                ownerName: 'Ramesh Singh',
+                ownerEmail: 'ramesh.delhi@example.com',
+                ownerPhone: '9876543230',
+                status: 'approved',
+                featured: true,
+                views: 298,
+                rating: 4.6,
+                reviews: [],
+                createdAt: new Date('2024-12-11').toISOString(),
+                updatedAt: new Date('2024-12-11').toISOString()
+            },
+            {
+                id: 'delhi_002',
+                title: '2BHK Dwarka',
+                description: 'Modern flat in Dwarka.',
+                type: 'apartment',
+                rent: 28000,
+                deposit: 84000,
+                address: 'Sector 12, Dwarka',
+                city: 'Delhi',
+                state: 'Delhi',
+                pincode: '110075',
+                bedrooms: 2,
+                bathrooms: 2,
+                area: 900,
+                furnished: 'semi-furnished',
+                amenities: ['parking', 'gym'],
+                images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
+                availableFrom: '2025-01-22',
+                ownerId: 'owner_delhi_2',
+                ownerName: 'Neha Kapoor',
+                ownerEmail: 'neha.delhi@example.com',
+                ownerPhone: '9876543231',
+                status: 'approved',
+                featured: true,
+                views: 201,
+                rating: 4.4,
+                reviews: [],
+                createdAt: new Date('2024-12-14').toISOString(),
+                updatedAt: new Date('2024-12-14').toISOString()
+            },
+            {
+                id: 'delhi_003',
+                title: 'Studio Lajpat Nagar',
+                description: 'Cozy studio apartment.',
+                type: 'studio',
+                rent: 18000,
+                deposit: 54000,
+                address: 'Lajpat Nagar 4',
+                city: 'Delhi',
+                state: 'Delhi',
+                pincode: '110024',
+                bedrooms: 1,
+                bathrooms: 1,
+                area: 450,
+                furnished: 'furnished',
+                amenities: ['wifi', 'ac'],
+                images: ['https://images.unsplash.com/photo-1502672260066-6bc54fc99ebe?w=800'],
+                availableFrom: '2025-01-28',
+                ownerId: 'owner_delhi_3',
+                ownerName: 'Vikram Malhotra',
+                ownerEmail: 'vikram.delhi@example.com',
+                ownerPhone: '9876543232',
+                status: 'approved',
+                featured: false,
+                views: 132,
+                rating: 4.2,
+                reviews: [],
+                createdAt: new Date('2024-12-21').toISOString(),
+                updatedAt: new Date('2024-12-21').toISOString()
+            },
+            {
+                id: 'delhi_004',
+                title: '4BHK Vasant Kunj Duplex',
+                description: 'Luxury duplex.',
+                type: 'duplex',
+                rent: 150000,
+                deposit: 450000,
+                address: 'Vasant Kunj',
+                city: 'Delhi',
+                state: 'Delhi',
+                pincode: '110070',
+                bedrooms: 4,
+                bathrooms: 5,
+                area: 3200,
+                furnished: 'furnished',
+                amenities: ['parking', 'pool', 'gym'],
+                images: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'],
+                availableFrom: '2025-03-15',
+                ownerId: 'owner_delhi_1',
+                ownerName: 'Ramesh Singh',
+                ownerEmail: 'ramesh.delhi@example.com',
+                ownerPhone: '9876543230',
+                status: 'approved',
+                featured: true,
+                views: 421,
                 rating: 4.8,
                 reviews: [],
                 createdAt: new Date('2024-12-05').toISOString(),
                 updatedAt: new Date('2024-12-05').toISOString()
             },
             {
-                id: 'prop_3',
-                title: '1BHK Studio Apartment near IT Park',
-                description: 'Cozy studio apartment perfect for working professionals. Walking distance to IT Park.',
-                type: 'studio',
-                rent: 15000,
-                deposit: 30000,
-                address: 'Building B, Tech Hub Residency, Adajan',
-                city: 'Surat',
-                state: 'Gujarat',
-                pincode: '395009',
-                bedrooms: 1,
-                bathrooms: 1,
-                area: 600,
-                furnished: 'furnished',
-                amenities: ['parking', 'wifi', 'ac', 'lift'],
-                images: ['https://images.unsplash.com/photo-1502672260066-6bc54fc99ebe?w=800'],
-                availableFrom: '2025-01-20',
-                ownerId: 'owner_1',
-                ownerName: 'Rajesh Kumar',
-                ownerEmail: 'rajesh@example.com',
-                ownerPhone: '9876543210',
+                id: 'delhi_005',
+                title: '2BHK Rohini',
+                description: 'Affordable flat.',
+                type: 'apartment',
+                rent: 20000,
+                deposit: 60000,
+                address: 'Sector 18, Rohini',
+                city: 'Delhi',
+                state: 'Delhi',
+                pincode: '110089',
+                bedrooms: 2,
+                bathrooms: 2,
+                area: 850,
+                furnished: 'unfurnished',
+                amenities: ['parking'],
+                images: ['https://images.unsplash.com/photo-1560185127-6a7e6c6a3f7c?w=800'],
+                availableFrom: '2025-02-12',
+                ownerId: 'owner_delhi_2',
+                ownerName: 'Neha Kapoor',
+                ownerEmail: 'neha.delhi@example.com',
+                ownerPhone: '9876543231',
                 status: 'approved',
                 featured: false,
-                views: 67,
-                rating: 4.2,
+                views: 87,
+                rating: 4.0,
+                reviews: [],
+                createdAt: new Date('2024-12-23').toISOString(),
+                updatedAt: new Date('2024-12-23').toISOString()
+            },
+
+            // PUNE - 5 Properties
+            {
+                id: 'pune_001',
+                title: '2BHK Hinjewadi',
+                description: 'Near IT Park.',
+                type: 'apartment',
+                rent: 25000,
+                deposit: 75000,
+                address: 'Phase 2, Hinjewadi',
+                city: 'Pune',
+                state: 'Maharashtra',
+                pincode: '411057',
+                bedrooms: 2,
+                bathrooms: 2,
+                area: 1000,
+                furnished: 'semi-furnished',
+                amenities: ['parking', 'gym'],
+                images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
+                availableFrom: '2025-01-30',
+                ownerId: 'owner_pune_1',
+                ownerName: 'Ashok Patil',
+                ownerEmail: 'ashok.pune@example.com',
+                ownerPhone: '9876543240',
+                status: 'approved',
+                featured: true,
+                views: 213,
+                rating: 4.5,
+                reviews: [],
+                createdAt: new Date('2024-12-13').toISOString(),
+                updatedAt: new Date('2024-12-13').toISOString()
+            },
+            {
+                id: 'pune_002',
+                title: '3BHK Villa Kharadi',
+                description: 'Independent villa.',
+                type: 'villa',
+                rent: 45000,
+                deposit: 135000,
+                address: 'Kharadi',
+                city: 'Pune',
+                state: 'Maharashtra',
+                pincode: '411014',
+                bedrooms: 3,
+                bathrooms: 3,
+                area: 1900,
+                furnished: 'semi-furnished',
+                amenities: ['parking', 'garden'],
+                images: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800'],
+                availableFrom: '2025-02-18',
+                ownerId: 'owner_pune_2',
+                ownerName: 'Snehal Kulkarni',
+                ownerEmail: 'snehal.pune@example.com',
+                ownerPhone: '9876543241',
+                status: 'approved',
+                featured: true,
+                views: 267,
+                rating: 4.7,
+                reviews: [],
+                createdAt: new Date('2024-12-09').toISOString(),
+                updatedAt: new Date('2024-12-09').toISOString()
+            },
+            {
+                id: 'pune_003',
+                title: '1BHK Koregaon Park',
+                description: 'Furnished flat.',
+                type: 'apartment',
+                rent: 22000,
+                deposit: 66000,
+                address: 'Koregaon Park',
+                city: 'Pune',
+                state: 'Maharashtra',
+                pincode: '411001',
+                bedrooms: 1,
+                bathrooms: 1,
+                area: 650,
+                furnished: 'furnished',
+                amenities: ['wifi', 'ac'],
+                images: ['https://images.unsplash.com/photo-1502672260066-6bc54fc99ebe?w=800'],
+                availableFrom: '2025-01-26',
+                ownerId: 'owner_pune_3',
+                ownerName: 'Rahul Deshmukh',
+                ownerEmail: 'rahul.pune@example.com',
+                ownerPhone: '9876543242',
+                status: 'approved',
+                featured: false,
+                views: 178,
+                rating: 4.3,
+                reviews: [],
+                createdAt: new Date('2024-12-15').toISOString(),
+                updatedAt: new Date('2024-12-15').toISOString()
+            },
+            {
+                id: 'pune_004',
+                title: '2BHK Wakad',
+                description: 'Budget apartment.',
+                type: 'apartment',
+                rent: 16000,
+                deposit: 48000,
+                address: 'Wakad',
+                city: 'Pune',
+                state: 'Maharashtra',
+                pincode: '411057',
+                bedrooms: 2,
+                bathrooms: 2,
+                area: 800,
+                furnished: 'unfurnished',
+                amenities: ['parking'],
+                images: ['https://images.unsplash.com/photo-1560185127-6a7e6c6a3f7c?w=800'],
+                availableFrom: '2025-02-08',
+                ownerId: 'owner_pune_1',
+                ownerName: 'Ashok Patil',
+                ownerEmail: 'ashok.pune@example.com',
+                ownerPhone: '9876543240',
+                status: 'approved',
+                featured: false,
+                views: 124,
+                rating: 4.1,
+                reviews: [],
+                createdAt: new Date('2024-12-20').toISOString(),
+                updatedAt: new Date('2024-12-20').toISOString()
+            },
+            {
+                id: 'pune_005',
+                title: '3BHK Penthouse Baner',
+                description: 'Luxury penthouse.',
+                type: 'penthouse',
+                rent: 85000,
+                deposit: 255000,
+                address: 'Baner',
+                city: 'Pune',
+                state: 'Maharashtra',
+                pincode: '411045',
+                bedrooms: 3,
+                bathrooms: 4,
+                area: 2400,
+                furnished: 'furnished',
+                amenities: ['parking', 'pool', 'gym'],
+                images: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'],
+                availableFrom: '2025-03-05',
+                ownerId: 'owner_pune_2',
+                ownerName: 'Snehal Kulkarni',
+                ownerEmail: 'snehal.pune@example.com',
+                ownerPhone: '9876543241',
+                status: 'approved',
+                featured: true,
+                views: 345,
+                rating: 4.8,
+                reviews: [],
+                createdAt: new Date('2024-12-07').toISOString(),
+                updatedAt: new Date('2024-12-07').toISOString()
+            },
+
+            // HYDERABAD - 5 Properties
+            {
+                id: 'hyderabad_001',
+                title: '2BHK HITEC City',
+                description: 'Near IT companies.',
+                type: 'apartment',
+                rent: 30000,
+                deposit: 90000,
+                address: 'HITEC City',
+                city: 'Hyderabad',
+                state: 'Telangana',
+                pincode: '500081',
+                bedrooms: 2,
+                bathrooms: 2,
+                area: 1100,
+                furnished: 'semi-furnished',
+                amenities: ['parking', 'gym'],
+                images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
+                availableFrom: '2025-01-24',
+                ownerId: 'owner_hyderabad_1',
+                ownerName: 'Srinivas Reddy',
+                ownerEmail: 'srinivas.hyderabad@example.com',
+                ownerPhone: '9876543250',
+                status: 'approved',
+                featured: true,
+                views: 256,
+                rating: 4.6,
                 reviews: [],
                 createdAt: new Date('2024-12-10').toISOString(),
                 updatedAt: new Date('2024-12-10').toISOString()
+            },
+            {
+                id: 'hyderabad_002',
+                title: '3BHK Villa Gachibowli',
+                description: 'Gated community.',
+                type: 'villa',
+                rent: 55000,
+                deposit: 165000,
+                address: 'Gachibowli',
+                city: 'Hyderabad',
+                state: 'Telangana',
+                pincode: '500032',
+                bedrooms: 3,
+                bathrooms: 3,
+                area: 2100,
+                furnished: 'semi-furnished',
+                amenities: ['parking', 'pool'],
+                images: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800'],
+                availableFrom: '2025-02-25',
+                ownerId: 'owner_hyderabad_2',
+                ownerName: 'Kavitha Rao',
+                ownerEmail: 'kavitha.hyderabad@example.com',
+                ownerPhone: '9876543251',
+                status: 'approved',
+                featured: true,
+                views: 289,
+                rating: 4.7,
+                reviews: [],
+                createdAt: new Date('2024-12-08').toISOString(),
+                updatedAt: new Date('2024-12-08').toISOString()
+            },
+            {
+                id: 'hyderabad_003',
+                title: 'Studio Banjara Hills',
+                description: 'Upscale location.',
+                type: 'studio',
+                rent: 20000,
+                deposit: 60000,
+                address: 'Banjara Hills',
+                city: 'Hyderabad',
+                state: 'Telangana',
+                pincode: '500034',
+                bedrooms: 1,
+                bathrooms: 1,
+                area: 550,
+                furnished: 'furnished',
+                amenities: ['wifi', 'ac'],
+                images: ['https://images.unsplash.com/photo-1502672260066-6bc54fc99ebe?w=800'],
+                availableFrom: '2025-01-29',
+                ownerId: 'owner_hyderabad_3',
+                ownerName: 'Naresh Kumar',
+                ownerEmail: 'naresh.hyderabad@example.com',
+                ownerPhone: '9876543252',
+                status: 'approved',
+                featured: false,
+                views: 167,
+                rating: 4.4,
+                reviews: [],
+                createdAt: new Date('2024-12-16').toISOString(),
+                updatedAt: new Date('2024-12-16').toISOString()
+            },
+            {
+                id: 'hyderabad_004',
+                title: '4BHK Jubilee Hills Duplex',
+                description: 'Ultra-luxury duplex.',
+                type: 'duplex',
+                rent: 180000,
+                deposit: 540000,
+                address: 'Jubilee Hills',
+                city: 'Hyderabad',
+                state: 'Telangana',
+                pincode: '500033',
+                bedrooms: 4,
+                bathrooms: 5,
+                area: 3500,
+                furnished: 'furnished',
+                amenities: ['parking', 'pool', 'gym'],
+                images: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'],
+                availableFrom: '2025-03-20',
+                ownerId: 'owner_hyderabad_1',
+                ownerName: 'Srinivas Reddy',
+                ownerEmail: 'srinivas.hyderabad@example.com',
+                ownerPhone: '9876543250',
+                status: 'approved',
+                featured: true,
+                views: 456,
+                rating: 4.9,
+                reviews: [],
+                createdAt: new Date('2024-12-03').toISOString(),
+                updatedAt: new Date('2024-12-03').toISOString()
+            },
+            {
+                id: 'hyderabad_005',
+                title: '2BHK Kukatpally',
+                description: 'Budget-friendly.',
+                type: 'apartment',
+                rent: 18000,
+                deposit: 54000,
+                address: 'KPHB, Kukatpally',
+                city: 'Hyderabad',
+                state: 'Telangana',
+                pincode: '500072',
+                bedrooms: 2,
+                bathrooms: 2,
+                area: 900,
+                furnished: 'unfurnished',
+                amenities: ['parking'],
+                images: ['https://images.unsplash.com/photo-1560185127-6a7e6c6a3f7c?w=800'],
+                availableFrom: '2025-02-14',
+                ownerId: 'owner_hyderabad_2',
+                ownerName: 'Kavitha Rao',
+                ownerEmail: 'kavitha.hyderabad@example.com',
+                ownerPhone: '9876543251',
+                status: 'approved',
+                featured: false,
+                views: 103,
+                rating: 4.2,
+                reviews: [],
+                createdAt: new Date('2024-12-19').toISOString(),
+                updatedAt: new Date('2024-12-19').toISOString()
             }
         ];
 
-        localStorage.setItem('properties', JSON.stringify(sampleProperties));
-        console.log('Sample properties initialized');
+        localStorage.setItem('properties', JSON.stringify(indianProperties));
+        console.log('✅ 25 Indian properties loaded!');
     }
 };
 
-// Get all properties
+// Helper to get properties safely
 const getProperties = () => {
-    return JSON.parse(localStorage.getItem('properties') || '[]');
+    try {
+        return JSON.parse(localStorage.getItem('properties') || '[]');
+    } catch (e) {
+        console.error('Error parsing properties:', e);
+        return [];
+    }
 };
 
 // Get property by ID
 const getPropertyById = (propertyId) => {
-    const properties = getProperties();
-    return properties.find(prop => prop.id === propertyId);
+    return getProperties().find(prop => prop.id === propertyId);
 };
 
-// Get properties by owner ID
+// Get properties by owner
 const getPropertiesByOwner = (ownerId) => {
-    const properties = getProperties();
-    return properties.filter(prop => prop.ownerId === ownerId);
+    return getProperties().filter(prop => prop.ownerId === ownerId);
 };
 
 // Get approved properties
 const getApprovedProperties = () => {
-    const properties = getProperties();
-    return properties.filter(prop => prop.status === 'approved');
+    return getProperties().filter(prop => prop.status === 'approved');
 };
 
 // Get featured properties
 const getFeaturedProperties = () => {
-    const properties = getApprovedProperties();
-    return properties.filter(prop => prop.featured).slice(0, 6);
+    return getApprovedProperties().filter(prop => prop.featured).slice(0, 6);
 };
 
-// Create new property
+// Create property
 const createProperty = (propertyData) => {
-    const { generateId } = window.RentalBridgeUtils;
     const properties = getProperties();
-    
     const newProperty = {
         ...propertyData,
-        id: generateId(),
-        status: 'pending', // Admin approval required
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+        status: 'pending',
         featured: false,
         views: 0,
         rating: 0,
@@ -181,10 +860,8 @@ const createProperty = (propertyData) => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
     };
-
     properties.push(newProperty);
     localStorage.setItem('properties', JSON.stringify(properties));
-    
     return newProperty;
 };
 
@@ -192,7 +869,6 @@ const createProperty = (propertyData) => {
 const updateProperty = (propertyId, updatedData) => {
     const properties = getProperties();
     const index = properties.findIndex(prop => prop.id === propertyId);
-    
     if (index !== -1) {
         properties[index] = {
             ...properties[index],
@@ -213,12 +889,12 @@ const deleteProperty = (propertyId) => {
     return true;
 };
 
-// Update property status (Admin only)
+// Update status
 const updatePropertyStatus = (propertyId, newStatus) => {
     return updateProperty(propertyId, { status: newStatus });
 };
 
-// Toggle featured status (Admin only)
+// Toggle featured
 const toggleFeatured = (propertyId) => {
     const property = getPropertyById(propertyId);
     if (property) {
@@ -227,7 +903,7 @@ const toggleFeatured = (propertyId) => {
     return null;
 };
 
-// Increment property views
+// Increment views
 const incrementViews = (propertyId) => {
     const property = getPropertyById(propertyId);
     if (property) {
@@ -236,79 +912,58 @@ const incrementViews = (propertyId) => {
     return null;
 };
 
-// Add review to property
+// Add review
 const addReview = (propertyId, reviewData) => {
-    const { generateId } = window.RentalBridgeUtils;
     const property = getPropertyById(propertyId);
-    
     if (property) {
         const newReview = {
-            id: generateId(),
+            id: Date.now().toString(36),
             ...reviewData,
             createdAt: new Date().toISOString()
         };
-        
         const reviews = [...property.reviews, newReview];
         const rating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
-        
         return updateProperty(propertyId, { reviews, rating });
     }
     return null;
 };
 
-// Search and filter properties
+// Search properties
 const searchProperties = (filters) => {
     let properties = getApprovedProperties();
     
-    // Search by keyword
     if (filters.keyword) {
         const keyword = filters.keyword.toLowerCase();
         properties = properties.filter(prop => 
             prop.title.toLowerCase().includes(keyword) ||
-            prop.description.toLowerCase().includes(keyword) ||
-            prop.address.toLowerCase().includes(keyword) ||
             prop.city.toLowerCase().includes(keyword)
         );
     }
     
-    // Filter by type
     if (filters.type && filters.type !== 'all') {
         properties = properties.filter(prop => prop.type === filters.type);
     }
     
-    // Filter by city
     if (filters.city) {
-        properties = properties.filter(prop => 
-            prop.city.toLowerCase() === filters.city.toLowerCase()
-        );
+        properties = properties.filter(prop => prop.city.toLowerCase() === filters.city.toLowerCase());
     }
     
-    // Filter by rent range
     if (filters.minRent) {
         properties = properties.filter(prop => prop.rent >= parseInt(filters.minRent));
     }
+    
     if (filters.maxRent) {
         properties = properties.filter(prop => prop.rent <= parseInt(filters.maxRent));
     }
     
-    // Filter by bedrooms
     if (filters.bedrooms && filters.bedrooms !== 'any') {
         properties = properties.filter(prop => prop.bedrooms >= parseInt(filters.bedrooms));
     }
     
-    // Filter by furnished type
     if (filters.furnished && filters.furnished !== 'all') {
         properties = properties.filter(prop => prop.furnished === filters.furnished);
     }
     
-    // Filter by amenities
-    if (filters.amenities && filters.amenities.length > 0) {
-        properties = properties.filter(prop => 
-            filters.amenities.every(amenity => prop.amenities.includes(amenity))
-        );
-    }
-    
-    // Sort properties
     if (filters.sortBy) {
         switch (filters.sortBy) {
             case 'rent-low':
@@ -320,70 +975,51 @@ const searchProperties = (filters) => {
             case 'newest':
                 properties.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 break;
-            case 'oldest':
-                properties.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                break;
-            case 'rating':
-                properties.sort((a, b) => b.rating - a.rating);
-                break;
-            case 'views':
-                properties.sort((a, b) => b.views - a.views);
-                break;
         }
     }
     
     return properties;
 };
 
-// Get property statistics
+// Get property stats
 const getPropertyStats = () => {
     const properties = getProperties();
     const approved = properties.filter(p => p.status === 'approved');
     const pending = properties.filter(p => p.status === 'pending');
     const rented = properties.filter(p => p.status === 'rented');
-    const totalViews = properties.reduce((sum, p) => sum + p.views, 0);
     
     return {
         total: properties.length,
         approved: approved.length,
         pending: pending.length,
         rented: rented.length,
-        available: approved.length - rented.length,
-        totalViews: totalViews
+        available: approved.length - rented.length
     };
 };
 
-// Get owner statistics
+// Get owner stats
 const getOwnerStats = (ownerId) => {
     const properties = getPropertiesByOwner(ownerId);
     const approved = properties.filter(p => p.status === 'approved');
     const pending = properties.filter(p => p.status === 'pending');
     const rented = properties.filter(p => p.status === 'rented');
-    const totalViews = properties.reduce((sum, p) => sum + p.views, 0);
-    const totalRevenue = rented.reduce((sum, p) => sum + p.rent, 0);
     
     return {
         total: properties.length,
         approved: approved.length,
         pending: pending.length,
         rented: rented.length,
-        available: approved.length - rented.length,
-        totalViews: totalViews,
-        totalRevenue: totalRevenue
+        available: approved.length - rented.length
     };
 };
 
-// Get all cities with property count
+// Get cities with count
 const getCitiesWithCount = () => {
     const properties = getApprovedProperties();
     const cities = {};
     
     properties.forEach(prop => {
-        if (cities[prop.city]) {
-            cities[prop.city]++;
-        } else {
-            cities[prop.city] = 1;
-        }
+        cities[prop.city] = (cities[prop.city] || 0) + 1;
     });
     
     return Object.entries(cities)
@@ -391,17 +1027,13 @@ const getCitiesWithCount = () => {
         .sort((a, b) => b.count - a.count);
 };
 
-// Get all property types with count
+// Get types with count
 const getPropertyTypesWithCount = () => {
     const properties = getApprovedProperties();
     const types = {};
     
     properties.forEach(prop => {
-        if (types[prop.type]) {
-            types[prop.type]++;
-        } else {
-            types[prop.type] = 1;
-        }
+        types[prop.type] = (types[prop.type] || 0) + 1;
     });
     
     return Object.entries(types)
@@ -426,59 +1058,10 @@ const validatePropertyData = (data) => {
     const errors = [];
     
     if (!data.title || data.title.trim().length < 10) {
-        errors.push('Title must be at least 10 characters long');
+        errors.push('Title must be at least 10 characters');
     }
-    
-    if (!data.description || data.description.trim().length < 50) {
-        errors.push('Description must be at least 50 characters long');
-    }
-    
-    if (!data.type) {
-        errors.push('Property type is required');
-    }
-    
     if (!data.rent || data.rent <= 0) {
-        errors.push('Valid rent amount is required');
-    }
-    
-    if (!data.address || data.address.trim().length < 10) {
-        errors.push('Complete address is required');
-    }
-    
-    if (!data.city) {
-        errors.push('City is required');
-    }
-    
-    if (!data.state) {
-        errors.push('State is required');
-    }
-    
-    if (!data.pincode || !/^\d{6}$/.test(data.pincode)) {
-        errors.push('Valid 6-digit pincode is required');
-    }
-    
-    if (!data.bedrooms || data.bedrooms < 0) {
-        errors.push('Number of bedrooms is required');
-    }
-    
-    if (!data.bathrooms || data.bathrooms < 0) {
-        errors.push('Number of bathrooms is required');
-    }
-    
-    if (!data.area || data.area <= 0) {
-        errors.push('Property area is required');
-    }
-    
-    if (!data.furnished) {
-        errors.push('Furnished status is required');
-    }
-    
-    if (!data.images || data.images.length === 0) {
-        errors.push('At least one property image is required');
-    }
-    
-    if (!data.availableFrom) {
-        errors.push('Available from date is required');
+        errors.push('Valid rent required');
     }
     
     return {
@@ -487,14 +1070,14 @@ const validatePropertyData = (data) => {
     };
 };
 
-// Initialize properties on load
+// Initialize on load
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSampleProperties);
 } else {
     initSampleProperties();
 }
 
-// Export property functions
+// Export
 window.RentalBridgeProperties = {
     getProperties,
     getPropertyById,
@@ -516,3 +1099,6 @@ window.RentalBridgeProperties = {
     getRentRange,
     validatePropertyData
 };
+// Alias so browse-properties.html can call getAllProperties()
+    window.getAllProperties = () => window.RentalBridgeProperties.getApprovedProperties();
+} // End of guard check

@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="../../assets/css/modals.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- ADD this line before seeker.js -->
+    <script src="../../assets/js/properties.js"></script>
     <style>
         /* ===============================
    PROPERTY DETAILS – DARK THEME
@@ -257,7 +259,7 @@
 </head>
 
 <body>
-    <div id="navbar-container"></div>
+    <div id="navbar"></div>
     <main class="details-container">
         <a href="browse-properties.html" class="back-btn"><i class="fas fa-arrow-left"></i>Back to Listings</a>
         <div class="image-gallery">
@@ -331,7 +333,7 @@
             </div>
         </div>
     </main>
-    <div id="footer-container"></div>
+    <div id="footer"></div>
     <script src="../../assets/js/storage.js"></script>
     <script src="../../assets/js/utils.js"></script>
     <script src="../../assets/js/main.js"></script>
@@ -352,8 +354,8 @@
                 return;
             }
 
-            // Get all properties and find by ID (convert to number for comparison)
-            const allProperties = getAllProperties();
+
+            const allProperties = window.RentalBridgeProperties.getApprovedProperties();
             property = allProperties.find(p => p.id == propertyId); // Use == for type coercion
 
             if (property) {
@@ -367,12 +369,12 @@
 
         function displayProperty(p) {
             document.getElementById('propertyTitle').textContent = p.title || 'Property';
-            document.getElementById('propertyLocation').textContent = p.location || 'Location not specified';
-            document.getElementById('propertyPrice').textContent = (p.price || 0).toLocaleString();
+            document.getElementById('propertyLocation').textContent = p.address + ', ' + p.city || 'Location not specified';
+            document.getElementById('propertyPrice').textContent = (p.rent || 0).toLocaleString();
             document.getElementById('bedrooms').textContent = p.bedrooms || 0;
             document.getElementById('bathrooms').textContent = p.bathrooms || 0;
             document.getElementById('area').textContent = (p.area || 0).toLocaleString();
-            document.getElementById('furnishing').textContent = p.furnished ? 'Furnished' : 'Unfurnished';
+            document.getElementById('furnishing').textContent = p.furnished || 'Not specified';
             document.getElementById('description').textContent = p.description || 'No description available';
 
             // Display main image
@@ -452,73 +454,73 @@
         }
 
         function sendInquiry(e) {
-    e.preventDefault();
-    
-    const name = document.getElementById('inquiryName').value;
-    const email = document.getElementById('inquiryEmail').value;
-    const phone = document.getElementById('inquiryPhone').value;
-    const message = document.getElementById('inquiryMessage').value;
-    
-    // Validate
-    if (!name || !email || !phone || !message) {
-        showToast('Please fill all fields', 'error');
-        return;
-    }
-    
-    // Save to storage first
-    const inquiry = {
-        propertyId: property.id,
-        propertyTitle: property.title,
-        propertyLocation: property.location,
-        propertyPrice: property.price,
-        name: name,
-        email: email,
-        phone: phone,
-        message: message,
-        createdAt: new Date().toISOString(),
-        status: 'sent'
-    };
-    
-    const allInquiries = getAllInquiries();
-    allInquiries.push(inquiry);
-    setData(STORAGE_KEYS.INQUIRIES, allInquiries);
-    
-    // Send via EmailJS
-    if (typeof emailjs !== 'undefined') {
-        const templateParams = {
-            to_name: 'Rental Bridge Team',
-            from_name: name,
-            from_email: email,
-            from_phone: phone,
-            property_title: property.title,
-            property_location: property.location,
-            property_rent: `₹${property.price}/month`,
-            message: message,
-            reply_to: email,
-            subject: `Property Inquiry: ${property.title} - ${property.location}`,
-            contact_date: new Date().toLocaleString('en-IN', {
-                dateStyle: 'full',
-                timeStyle: 'short'
-            })
-        };
-        
-        emailjs.init('xmt7I_-lQCfJZVGl_');
-        
-        emailjs.send('service_i9ghxpw', 'template_vrzgt3q', templateParams)
-            .then(function(response) {
-                console.log('Email sent successfully:', response);
-                showToast('✅ Inquiry sent successfully! We will contact you soon.', 'success');
-                e.target.reset();
-            })
-            .catch(function(error) {
-                console.error('Email send failed:', error);
-                showToast('Inquiry saved but email failed. We will still contact you.', 'warning');
-                e.target.reset();
-            });
-    } else {
-        // Fallback to mailto
-        const subject = `Property Inquiry: ${property.title} - ${property.location}`;
-        const body = `
+            e.preventDefault();
+
+            const name = document.getElementById('inquiryName').value;
+            const email = document.getElementById('inquiryEmail').value;
+            const phone = document.getElementById('inquiryPhone').value;
+            const message = document.getElementById('inquiryMessage').value;
+
+            // Validate
+            if (!name || !email || !phone || !message) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            // Save to storage first
+            const inquiry = {
+                propertyId: property.id,
+                propertyTitle: property.title,
+                propertyLocation: `${property.address}, ${property.city}`,
+                propertyPrice: property.rent,
+                name: name,
+                email: email,
+                phone: phone,
+                message: message,
+                createdAt: new Date().toISOString(),
+                status: 'sent'
+            };
+
+            const allInquiries = getAllInquiries();
+            allInquiries.push(inquiry);
+            setData(STORAGE_KEYS.INQUIRIES, allInquiries);
+
+            // Send via EmailJS
+            if (typeof emailjs !== 'undefined') {
+                const templateParams = {
+                    to_name: 'Rental Bridge Team',
+                    from_name: name,
+                    from_email: email,
+                    from_phone: phone,
+                    property_title: property.title,
+                    property_location: `${property.address}, ${property.city}`,
+                    property_rent: `₹${property.rent}/month`,
+                    message: message,
+                    reply_to: email,
+                    subject: `Property Inquiry: ${property.title} - ${property.city}`,
+                    contact_date: new Date().toLocaleString('en-IN', {
+                        dateStyle: 'full',
+                        timeStyle: 'short'
+                    })
+                };
+
+                emailjs.init('xmt7I_-lQCfJZVGl_');
+
+                emailjs.send('service_i9ghxpw', 'template_vrzgt3q', templateParams)
+                    .then(function (response) {
+                        console.log('Email sent successfully:', response);
+                        showToast('✅ Inquiry sent successfully! We will contact you soon.', 'success');
+                        e.target.reset();
+                    })
+                    .catch(function (error) {
+                        console.error('Email send failed:', error);
+                        showToast('Inquiry saved but email failed. We will still contact you.', 'warning');
+                        e.target.reset();
+                    });
+            } else {
+                // Fallback to mailto
+                const subject = `Property Inquiry: ${property.title} - ${property.city}`;
+                const body = `
 Name: ${name}
 Email: ${email}
 Phone: ${phone}
@@ -529,15 +531,15 @@ ${message}
 
 Property Details:
 Title: ${property.title}
-Location: ${property.location}
-Price: ₹${property.price}/month
+Location: ${property.address}, ${property.city}
+Price: ₹${property.rent}/month  
         `.trim();
-        
-        window.open(`mailto:owner@rentalbridge.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-        showToast('Inquiry saved! Opening email client...', 'success');
-        e.target.reset();
-    }
-}
+
+                window.open(`mailto:owner@rentalbridge.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+                showToast('Inquiry saved! Opening email client...', 'success');
+                e.target.reset();
+            }
+        }
     </script>
 </body>
 
